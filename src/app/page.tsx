@@ -2,128 +2,309 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import PixelAvatar from '@/components/PixelAvatar';
+import RadarChart from '@/components/RadarChart';
 
 // ─── CHARACTER DATA ──────────────────────────────────────────────
 const CHARACTER = {
   name: 'JONATHAN KURNIAWAN',
-  title: 'Quantum Architect',
+  title: 'The Shaper',
   subclass: 'Manifesting Generator',
-  level: 31,
-  xp: { current: 9800000, next: 12000000 },
-  bio: 'One who builds systems across multiple realities simultaneously. Dual-mind operator — explores with divergent thought, executes with convergent precision.',
+  level: 32,
+  bio: 'Dual-mind operator — explores with divergent thought, executes with convergent precision. Builds frameworks across domains, then builds more frameworks about those frameworks.',
 };
 
-interface Stat {
-  name: string;
-  abbr: string;
-  value: number;
-  max: number;
-  color: string;
-  description: string;
-}
-
-const STATS: Stat[] = [
-  { name: 'Intelligence', abbr: 'MAG', value: 38, max: 40, color: '#8b5cf6', description: 'Strategic thinking, framework mastery, philosophical depth' },
-  { name: 'Self-Awareness', abbr: 'RES', value: 37, max: 40, color: '#22d3ee', description: 'Deep introspection, metacognitive awareness, multiple analytical lenses' },
-  { name: 'Versatility', abbr: 'SKL', value: 36, max: 40, color: '#22c55e', description: 'Cross-domain capability, multi-framework fluency, cultural adaptability' },
-  { name: 'Adaptability', abbr: 'SPD', value: 34, max: 40, color: '#f59e0b', description: 'Rapid platform adoption, quick context switching, environment flexibility' },
-  { name: 'Vitality', abbr: 'HP', value: 30, max: 40, color: '#ef4444', description: 'Physical resilience — unresolved but improving' },
-  { name: 'Influence', abbr: 'CHA', value: 29, max: 40, color: '#ec4899', description: 'Directive communication, underutilized — zero published content yet' },
-  { name: 'Emotional Guard', abbr: 'DEF', value: 28, max: 40, color: '#3b82f6', description: 'Strong facade externally, outsources vulnerability to safe spaces' },
-  { name: 'Execution', abbr: 'STR', value: 24, max: 40, color: '#f97316', description: '489 code conversations prove ability — but threshold requires perfection' },
-];
-
-interface Skill {
-  name: string;
-  level: number;
-  maxLevel: number;
-  description: string;
-}
-
-interface SkillBranch {
-  name: string;
-  icon: string;
-  color: string;
-  skills: Skill[];
-}
-
-const SKILL_TREE: SkillBranch[] = [
+// ─── RADAR ATTRIBUTES (6-axis) ──────────────────────────────────
+const ATTRIBUTES = [
   {
-    name: 'System Architecture',
-    icon: '⚙',
+    label: 'Intelligence',
+    abbr: 'INT',
+    value: 38,
+    max: 40,
     color: '#8b5cf6',
-    skills: [
-      { name: 'Framework Design', level: 9, maxLevel: 10, description: 'Virtual C-suites, Life Operating Systems, Second Brains, PARA structures' },
-      { name: 'System Architecture', level: 8, maxLevel: 10, description: 'Building interconnected systems across platforms and domains' },
-      { name: 'Infrastructure', level: 7, maxLevel: 10, description: 'RAG platforms, agent systems, SaaS foundations' },
-      { name: 'Code Execution', level: 6, maxLevel: 10, description: '489 code conversations — builds when the vision crystallizes' },
-    ],
+    description: 'Creative ideation, conceptual thinking, and framework mastery. 98th percentile creative, 93rd conceptual, 97th curiosity. 9.8M words of evidence.',
   },
   {
-    name: 'Strategic Vision',
-    icon: '◆',
+    label: 'Wisdom',
+    abbr: 'WIS',
+    value: 30,
+    max: 40,
     color: '#22d3ee',
-    skills: [
-      { name: 'Pattern Recognition', level: 9, maxLevel: 10, description: 'Cross-domain pattern synthesis, behavioral analysis' },
-      { name: 'Blueprint Crafting', level: 9, maxLevel: 10, description: 'PRDs, proposals, roadmaps, operating frameworks' },
-      { name: 'Strategic Planning', level: 9, maxLevel: 10, description: '552 planning conversations — dominant cognitive mode' },
-      { name: 'Meta-Cognition', level: 8, maxLevel: 10, description: 'Intuitively matches AI tools to cognitive needs' },
-    ],
+    description: 'Deep metacognition but undermined by Hyper-Rational saboteur (6.3). 11% empathetic — intellectualizes emotions instead of feeling them.',
   },
   {
-    name: 'AI Mastery',
-    icon: '★',
-    color: '#f59e0b',
-    skills: [
-      { name: 'Prompt Engineering', level: 9, maxLevel: 10, description: '3,954 conversations, 9.8M words — master of AI dialogue' },
-      { name: 'Tool Synthesis', level: 9, maxLevel: 10, description: 'Naturally differentiated AI platforms by cognitive mode' },
-      { name: 'AI Governance', level: 8, maxLevel: 10, description: 'Primary professional identity — governance as differentiator' },
-      { name: 'AI Integration', level: 8, maxLevel: 10, description: '0.3% AI-echo rate — genuine cognitive integration, not dependency' },
-    ],
-  },
-  {
-    name: 'Cultural Navigation',
-    icon: '◈',
-    color: '#22c55e',
-    skills: [
-      { name: 'Geographic Adaptability', level: 8, maxLevel: 10, description: 'Dubai, Singapore, Indonesia, Canada, Australia, Silicon Valley' },
-      { name: 'Cross-Cultural Fluency', level: 7, maxLevel: 10, description: 'Each location is an identity proposition, not just a place' },
-      { name: 'Identity Synthesis', level: 6, maxLevel: 10, description: 'In progress — multiple identities coexist in superposition' },
-    ],
-  },
-  {
-    name: 'Inner Work',
-    icon: '☽',
+    label: 'Charisma',
+    abbr: 'CHA',
+    value: 26,
+    max: 40,
     color: '#ec4899',
-    skills: [
-      { name: 'Jungian Analysis', level: 8, maxLevel: 10, description: '241 conversations — archetypes, shadow, persona, individuation' },
-      { name: 'Self-Optimization', level: 8, maxLevel: 10, description: '375 conversations — relentless drive to level up' },
-      { name: 'Existential Navigation', level: 7, maxLevel: 10, description: '220 conversations — meaning, purpose, authenticity, freedom' },
-      { name: 'Mindfulness Practice', level: 6, maxLevel: 10, description: '341 conversations on acceptance — genuine but in tension with optimization' },
+    description: '92% extraversion capacity, 98th percentile for inspiring others. But zero published content and vulnerability outsourced to AI.',
+  },
+  {
+    label: 'Constitution',
+    abbr: 'CON',
+    value: 24,
+    max: 40,
+    color: '#f59e0b',
+    description: '3,954 conversations prove mental endurance. But only 35% composed — burst conscientiousness, not sustained discipline.',
+  },
+  {
+    label: 'Willpower',
+    abbr: 'WILL',
+    value: 18,
+    max: 40,
+    color: '#ef4444',
+    description: '13% persistent, 12% dependable. Plans 1.7x more than executes. Restless saboteur (6.8) undermines follow-through.',
+  },
+  {
+    label: 'Strength',
+    abbr: 'STR',
+    value: 14,
+    max: 40,
+    color: '#f97316',
+    description: '80 body-related conversations, zero resolved. Physical health is the acknowledged, perennial gap.',
+  },
+];
+
+// ─── OPERATING MANUAL ───────────────────────────────────────────
+interface ManualEntry {
+  title: string;
+  icon: string;
+  content: string[];
+}
+
+const MANUAL_SECTIONS: ManualEntry[] = [
+  {
+    title: 'How I Think',
+    icon: '◈',
+    content: [
+      'Dual-mind operator — Exploration via ChatGPT (divergent), Execution via Claude (convergent).',
+      '70% of cognitive energy goes to exploration, 15% to implementation, 15% to reflection.',
+      'I think in frameworks. If a problem exists, I will build a system to understand it before solving it.',
+      'Pattern-first processor — I see connections across domains before I see individual details.',
+    ],
+  },
+  {
+    title: 'How I Communicate',
+    icon: '◇',
+    content: [
+      'Concise and directive. 66% of my messages are under 50 words.',
+      '96th percentile critical thinking, 80th percentile directness. I don\'t soften feedback.',
+      'I lead with "why" and expect others to fill in "how." If I\'m giving you the how, you\'re new.',
+      'Written > verbal. I process better asynchronously.',
+    ],
+  },
+  {
+    title: 'What Drives Me',
+    icon: '⚡',
+    content: [
+      'Achievement motivation (41.8%) dominates — "I need to achieve to be worthy."',
+      'Mastery over performance. I care about being genuinely good, not looking good.',
+      'Building systems that outlast the moment. Legacy through structure.',
+      'The intersection of AI governance × personal development × entrepreneurship.',
+    ],
+  },
+  {
+    title: 'What Drains Me',
+    icon: '▼',
+    content: [
+      'Routine logistics and administrative overhead without intellectual content.',
+      'Forced persistence on tasks I\'ve mentally completed.',
+      'Emotional labor without an analytical framework to process through.',
+      'Being asked to execute someone else\'s vision without understanding the architecture.',
+    ],
+  },
+  {
+    title: 'The Five Faces',
+    icon: '★',
+    content: [
+      'The Professor — Teaching, mentoring, framework delivery. Activated by genuine curiosity in others.',
+      'The Catalyst — Igniting ideas and momentum. Short bursts of intense creative energy.',
+      'The Commander — Directive leadership when stakes are high. 96% critical, 80% direct.',
+      'The Alchemist — Synthesizing disparate ideas into novel frameworks. The signature move.',
+      'The Architect — Building systems, structures, operating models. Where planning lives.',
+    ],
+  },
+  {
+    title: 'Working With Me',
+    icon: '◆',
+    content: [
+      'Give me the "why" first. I\'ll reject tasks I don\'t understand the purpose of.',
+      'Expect frameworks in response to problems — that\'s how I process.',
+      'Pair me with finishers. I generate 1.7x more plans than I execute.',
+      'Don\'t ask me to slow down for comfort — ask me to slow down for quality.',
+      'Challenge my ideas directly. I respect intellectual rigor over diplomatic consensus.',
     ],
   },
 ];
 
-interface StatusEffect {
+// ─── ACTIVE CONDITIONS ──────────────────────────────────────────
+interface Condition {
   name: string;
   type: 'buff' | 'debuff';
   icon: string;
   description: string;
-  intensity: string;
+  source: string;
 }
 
-const STATUS_EFFECTS: StatusEffect[] = [
-  { name: 'Dual Mind Stance', type: 'buff', icon: '⚡', description: 'Can switch between Exploration Mode (divergent) and Execution Mode (convergent) at will', intensity: 'Permanent' },
-  { name: 'Metacognitive Shield', type: 'buff', icon: '🛡', description: 'High self-awareness provides partial immunity to blind spots', intensity: 'Active' },
-  { name: 'Framework Arsenal', type: 'buff', icon: '📚', description: 'Access to 10+ philosophical and analytical frameworks simultaneously', intensity: 'Stacked x10' },
-  { name: 'Quantum Processing', type: 'buff', icon: '🔮', description: 'Can hold multiple identity states simultaneously without collapse', intensity: 'Unstable' },
-  { name: 'Elevated Threshold', type: 'debuff', icon: '⏳', description: 'Requires near-perfection before shipping. Plans 1.7x more than executes.', intensity: '-15% Ship Speed' },
-  { name: 'Island Hopper', type: 'debuff', icon: '🏝', description: 'Commitment horizon measured in months, not years. Breadth over depth.', intensity: '-20% Mastery' },
-  { name: 'System Builder\'s Compulsion', type: 'debuff', icon: '📊', description: '30% chance to convert emotional problems into structural problems', intensity: 'Recurring' },
-  { name: 'Accumulation Drive', type: 'debuff', icon: '🔄', description: 'Declared simplification year, but behavior is expansion', intensity: '-10% Simplify' },
-  { name: 'Validation Asymmetry', type: 'debuff', icon: '👁', description: 'Vulnerability outsourced to AI. Competent facade maintained with humans.', intensity: 'Passive' },
+const CONDITIONS: Condition[] = [
+  { name: 'Dual Mind Stance', type: 'buff', icon: '⚡', description: 'Switch between Exploration Mode (divergent) and Execution Mode (convergent) at will.', source: 'Innate — Manifesting Generator' },
+  { name: 'Framework Arsenal', type: 'buff', icon: '📚', description: '10+ philosophical and analytical frameworks loaded simultaneously.', source: '241 Jungian + 220 Existential + 104 Lean convos' },
+  { name: 'Metacognitive Shield', type: 'buff', icon: '🛡', description: 'High self-awareness provides partial immunity to blind spots — when used.', source: 'PrinciplesYou: 97% Self-Questioning' },
+  { name: 'Quantum Processing', type: 'buff', icon: '🔮', description: 'Holds multiple identity states in superposition without premature collapse.', source: 'Cross-platform identity analysis' },
+  { name: 'Elevated Threshold', type: 'debuff', icon: '⏳', description: 'Requires near-perfection before shipping. Plans 1.7x more than executes.', source: 'Planning (552) vs Execution (318) convos' },
+  { name: 'Island Hopper', type: 'debuff', icon: '🏝', description: 'Commitment horizon in months, not years. Breadth always wins over depth.', source: 'Restless saboteur: 6.8/10' },
+  { name: 'System Builder\'s Compulsion', type: 'debuff', icon: '📊', description: '30% chance to convert emotional problems into structural problems.', source: 'Hyper-Rational saboteur: 6.3/10' },
+  { name: 'Accumulation Drive', type: 'debuff', icon: '🔄', description: 'Declared simplification year, but behavior is relentless expansion.', source: 'Simplify (300) vs Accumulate (155) convos' },
+  { name: 'Validation Asymmetry', type: 'debuff', icon: '👁', description: 'Vulnerability outsourced to AI. Competent facade maintained with humans.', source: '92% vulnerability with AI, ~8% with humans' },
 ];
 
+// ─── CAPABILITY MAP ─────────────────────────────────────────────
+type Proficiency = 'Expert' | 'Advanced' | 'Proficient' | 'Developing';
+
+interface Capability {
+  name: string;
+  level: Proficiency;
+  evidence: string;
+}
+
+interface CapabilityDomain {
+  domain: string;
+  icon: string;
+  color: string;
+  capabilities: Capability[];
+}
+
+const CAPABILITIES: CapabilityDomain[] = [
+  {
+    domain: 'AI & Technology',
+    icon: '⚡',
+    color: '#22d3ee',
+    capabilities: [
+      { name: 'Prompt Engineering', level: 'Expert', evidence: '3,954 convos, 9.8M words — 0.3% AI-echo rate' },
+      { name: 'AI Governance', level: 'Expert', evidence: 'Primary professional differentiator' },
+      { name: 'Tool Synthesis', level: 'Expert', evidence: 'Naturally differentiated platforms by cognitive mode' },
+      { name: 'Code & Infrastructure', level: 'Advanced', evidence: '489 code convos — builds when vision crystallizes' },
+    ],
+  },
+  {
+    domain: 'Strategic Thinking',
+    icon: '◆',
+    color: '#8b5cf6',
+    capabilities: [
+      { name: 'Framework Design', level: 'Expert', evidence: 'Virtual C-suites, Life OS, PARA, Second Brain' },
+      { name: 'Pattern Recognition', level: 'Expert', evidence: 'Cross-domain synthesis, behavioral analysis' },
+      { name: 'Strategic Planning', level: 'Expert', evidence: '552 planning conversations — dominant mode' },
+      { name: 'Blueprint Crafting', level: 'Advanced', evidence: 'PRDs, proposals, roadmaps, operating models' },
+    ],
+  },
+  {
+    domain: 'Inner Work',
+    icon: '☽',
+    color: '#ec4899',
+    capabilities: [
+      { name: 'Jungian Analysis', level: 'Advanced', evidence: '241 convos — archetypes, shadow, individuation' },
+      { name: 'Self-Optimization', level: 'Advanced', evidence: '375 convos — relentless drive to level up' },
+      { name: 'Existential Navigation', level: 'Advanced', evidence: '220 convos — meaning, purpose, authenticity' },
+      { name: 'Mindfulness', level: 'Proficient', evidence: 'Genuine but in tension with optimization drive' },
+    ],
+  },
+  {
+    domain: 'Cultural Navigation',
+    icon: '◈',
+    color: '#22c55e',
+    capabilities: [
+      { name: 'Geographic Adaptability', level: 'Advanced', evidence: 'Dubai, Singapore, Indonesia, Canada, Australia, SV' },
+      { name: 'Cross-Cultural Fluency', level: 'Proficient', evidence: 'Each location is an identity proposition' },
+      { name: 'Identity Synthesis', level: 'Developing', evidence: 'Multiple identities in superposition — unresolved' },
+    ],
+  },
+  {
+    domain: 'Execution & Output',
+    icon: '▶',
+    color: '#f59e0b',
+    capabilities: [
+      { name: 'Vision Articulation', level: 'Expert', evidence: 'Can communicate complex ideas with precision' },
+      { name: 'Project Initiation', level: 'Advanced', evidence: 'Strong starts, multiple simultaneous projects' },
+      { name: 'Sustained Delivery', level: 'Developing', evidence: '13% persistent — the acknowledged gap' },
+      { name: 'Physical Discipline', level: 'Developing', evidence: '80 body convos, zero resolution' },
+    ],
+  },
+];
+
+// ─── CHARACTER DYNAMICS ─────────────────────────────────────────
+interface Dynamic {
+  name: string;
+  sideA: string;
+  sideB: string;
+  position: number; // 0-100, where 50 = balanced
+  conversationsA: number;
+  conversationsB: number;
+  description: string;
+  severity: 'critical' | 'high' | 'moderate';
+}
+
+const DYNAMICS: Dynamic[] = [
+  {
+    name: 'The Core Paradox',
+    sideA: 'Self-Acceptance',
+    sideB: 'Self-Optimization',
+    position: 48,
+    conversationsA: 341,
+    conversationsB: 375,
+    description: 'Almost perfectly balanced = maximum tension. Simultaneously pursuing radical acceptance and radical optimization.',
+    severity: 'critical',
+  },
+  {
+    name: 'The Execution Gap',
+    sideA: 'Planning',
+    sideB: 'Shipping',
+    position: 63,
+    conversationsA: 552,
+    conversationsB: 318,
+    description: 'Plans 1.7x more than ships. System-building as a sophisticated form of productive procrastination.',
+    severity: 'high',
+  },
+  {
+    name: 'The Depth Dilemma',
+    sideA: 'Breadth',
+    sideB: 'Depth',
+    position: 65,
+    conversationsA: 339,
+    conversationsB: 180,
+    description: 'Aspires to depth but practices breadth. The island-hopping pattern.',
+    severity: 'high',
+  },
+  {
+    name: 'The Accumulation Paradox',
+    sideA: 'Simplify',
+    sideB: 'Accumulate',
+    position: 34,
+    conversationsA: 300,
+    conversationsB: 155,
+    description: 'Talks about simplifying 2x more, but behavior is expansion. Textbook cognitive dissonance.',
+    severity: 'high',
+  },
+  {
+    name: 'The Path Split',
+    sideA: 'Sovereign Builder',
+    sideB: 'Institutional Path',
+    position: 31,
+    conversationsA: 163,
+    conversationsB: 73,
+    description: 'Builder leads 2:1, but institutional path persists as financial insurance.',
+    severity: 'moderate',
+  },
+];
+
+// ─── SABOTEUR CYCLE ─────────────────────────────────────────────
+const SABOTEUR_CYCLE = [
+  { name: 'Restless', score: 6.8, effect: 'Initiates new project before finishing current one' },
+  { name: 'Hyper-Rational', score: 6.3, effect: 'Converts feelings into frameworks' },
+  { name: 'Hyper-Achiever', score: 5.9, effect: 'Worth = output. Rest feels like regression.' },
+  { name: 'Controller', score: 5.3, effect: 'If I can\'t control the system, I\'ll build a new one' },
+];
+
+// ─── GROWTH PATH ────────────────────────────────────────────────
 interface EvolutionStage {
   name: string;
   period: string;
@@ -133,12 +314,12 @@ interface EvolutionStage {
   future: boolean;
 }
 
-const EVOLUTION_PATH: EvolutionStage[] = [
+const EVOLUTION: EvolutionStage[] = [
   {
     name: 'Code Apprentice',
     period: '2023 Q1-Q2',
     description: 'Early AI adoption. Building GPTs, playing virtual C-suite. The spark ignites.',
-    traits: ['Builder/Engineer', 'Chief/Executive'],
+    traits: ['Builder', 'Executive'],
     active: false,
     future: false,
   },
@@ -151,7 +332,7 @@ const EVOLUTION_PATH: EvolutionStage[] = [
     future: false,
   },
   {
-    name: 'Quantum Architect',
+    name: 'The Shaper',
     period: '2024 Q3 — Present',
     description: 'Multi-identity synthesis. All modes running simultaneously. The wave function has not yet collapsed.',
     traits: ['Builder', 'Founder', 'Strategist', 'Creator'],
@@ -168,101 +349,6 @@ const EVOLUTION_PATH: EvolutionStage[] = [
   },
 ];
 
-interface Tension {
-  name: string;
-  sideA: string;
-  sideB: string;
-  ratio: number;
-  conversationsA: number;
-  conversationsB: number;
-  position: number;
-  description: string;
-  severity: 'critical' | 'high' | 'moderate';
-}
-
-const TENSIONS: Tension[] = [
-  {
-    name: 'The Core Paradox',
-    sideA: 'Self-Acceptance',
-    sideB: 'Self-Optimization',
-    ratio: 0.91,
-    conversationsA: 341,
-    conversationsB: 375,
-    position: 48,
-    description: 'Almost perfectly balanced = maximum tension. Simultaneously pursues radical acceptance and radical optimization.',
-    severity: 'critical',
-  },
-  {
-    name: 'The Path Split',
-    sideA: 'Sovereign Builder',
-    sideB: 'Institutional Path',
-    ratio: 2.23,
-    conversationsA: 163,
-    conversationsB: 73,
-    position: 31,
-    description: 'Builder leads 2:1, but institutional path persists as "financial insurance" — a defense mechanism.',
-    severity: 'moderate',
-  },
-  {
-    name: 'The Execution Gap',
-    sideA: 'Planning',
-    sideB: 'Execution',
-    ratio: 1.74,
-    conversationsA: 552,
-    conversationsB: 318,
-    position: 37,
-    description: 'Plans 1.7x more than ships. System-building as substitute for action.',
-    severity: 'high',
-  },
-  {
-    name: 'The Accumulation Paradox',
-    sideA: 'Simplify',
-    sideB: 'Accumulate',
-    ratio: 1.94,
-    conversationsA: 300,
-    conversationsB: 155,
-    position: 34,
-    description: 'Talks about simplifying 2x more, but the behavior is expansion. Textbook cognitive dissonance.',
-    severity: 'high',
-  },
-  {
-    name: 'The Depth Dilemma',
-    sideA: 'Depth / Mastery',
-    sideB: 'Breadth / Exploration',
-    ratio: 1.88,
-    conversationsA: 339,
-    conversationsB: 180,
-    position: 35,
-    description: 'Aspires to depth but practices breadth. The island-hopping pattern.',
-    severity: 'high',
-  },
-];
-
-interface Equipment {
-  slot: string;
-  name: string;
-  uses: number;
-  description: string;
-  color: string;
-}
-
-const LOADOUT: Equipment[] = [
-  { slot: 'WEAPON', name: 'Jungian Psychology', uses: 241, description: 'Primary analytical lens — archetypes, shadow, persona, individuation', color: '#8b5cf6' },
-  { slot: 'SHIELD', name: 'Positive Psychology', uses: 220, description: 'Flow, strengths, resilience, gratitude — the defense against nihilism', color: '#22c55e' },
-  { slot: 'ARMOR', name: 'Existentialism', uses: 220, description: 'Meaning, purpose, authenticity, freedom — the existential armor', color: '#3b82f6' },
-  { slot: 'ACC. 1', name: 'Lean / Agile', uses: 104, description: 'MVP, iterate, sprint — the methodology the personality overrides', color: '#f59e0b' },
-  { slot: 'ACC. 2', name: 'Human Design', uses: 70, description: 'Manifesting Generator — personal metaphysics and identity lens', color: '#ec4899' },
-  { slot: 'RING', name: 'Behavioral Economics', uses: 59, description: 'Biases, nudges, framing — the decision-making toolkit', color: '#22d3ee' },
-];
-
-const AFFINITIES = [
-  { element: 'Lightning', icon: '⚡', description: 'AI / Technology', strength: 95, color: '#22d3ee' },
-  { element: 'Fire', icon: '🔥', description: 'Builder / Creator', strength: 85, color: '#f97316' },
-  { element: 'Wind', icon: '💨', description: 'Explorer / Adaptability', strength: 80, color: '#22c55e' },
-  { element: 'Light', icon: '✨', description: 'Self-Optimization', strength: 75, color: '#f59e0b' },
-  { element: 'Dark', icon: '🌑', description: 'Shadow Work / Jungian', strength: 70, color: '#8b5cf6' },
-];
-
 const EVOLUTION_REQUIREMENTS = [
   { text: 'Collapse the quantum identity — choose a primary', done: false },
   { text: 'Ship 3 major projects to production', done: false },
@@ -271,42 +357,37 @@ const EVOLUTION_REQUIREMENTS = [
   { text: 'Resolve the geographic equation', done: false },
 ];
 
+const PHILOSOPHICAL_LOADOUT = [
+  { name: 'Jungian Psychology', uses: 241, color: '#8b5cf6' },
+  { name: 'Positive Psychology', uses: 220, color: '#22c55e' },
+  { name: 'Existentialism', uses: 220, color: '#3b82f6' },
+  { name: 'Lean / Agile', uses: 104, color: '#f59e0b' },
+  { name: 'Human Design', uses: 70, color: '#ec4899' },
+  { name: 'Behavioral Economics', uses: 59, color: '#22d3ee' },
+];
+
 // ─── HELPER COMPONENTS ────────────────────────────────────────────
 
-function StatBar({ stat, animate }: { stat: Stat; animate: boolean }) {
-  const pct = (stat.value / stat.max) * 100;
+function ProficiencyBadge({ level }: { level: Proficiency }) {
+  const styles: Record<Proficiency, { bg: string; text: string; border: string }> = {
+    Expert: { bg: 'rgba(139,92,246,0.15)', text: '#8b5cf6', border: 'rgba(139,92,246,0.3)' },
+    Advanced: { bg: 'rgba(34,211,238,0.15)', text: '#22d3ee', border: 'rgba(34,211,238,0.3)' },
+    Proficient: { bg: 'rgba(34,197,94,0.15)', text: '#22c55e', border: 'rgba(34,197,94,0.3)' },
+    Developing: { bg: 'rgba(245,158,11,0.15)', text: '#f59e0b', border: 'rgba(245,158,11,0.3)' },
+  };
+  const s = styles[level];
   return (
-    <div className="flex items-center gap-3 group relative">
-      <span className="w-8 text-[9px] font-bold shrink-0" style={{ color: stat.color, fontFamily: 'var(--font-press-start)' }}>
-        {stat.abbr}
-      </span>
-      <div className="stat-bar-track flex-1 border border-[#2a3050]">
-        <div
-          className="stat-bar-fill"
-          style={{
-            width: animate ? `${pct}%` : '0%',
-            background: `linear-gradient(90deg, ${stat.color}cc, ${stat.color})`,
-          }}
-        />
-      </div>
-      <span className="w-10 text-right text-[10px] text-[#8892a8] tabular-nums">
-        {stat.value}/{stat.max}
-      </span>
-    </div>
-  );
-}
-
-function SkillPips({ level, maxLevel, color }: { level: number; maxLevel: number; color: string }) {
-  return (
-    <div className="flex gap-0.5">
-      {Array.from({ length: maxLevel }).map((_, i) => (
-        <div
-          key={i}
-          className={`skill-pip ${i < level ? 'filled' : ''}`}
-          style={i < level ? { background: color } : {}}
-        />
-      ))}
-    </div>
+    <span
+      className="text-[7px] px-1.5 py-0.5 uppercase tracking-wider shrink-0"
+      style={{
+        fontFamily: 'var(--font-press-start)',
+        background: s.bg,
+        color: s.text,
+        border: `1px solid ${s.border}`,
+      }}
+    >
+      {level}
+    </span>
   );
 }
 
@@ -336,7 +417,8 @@ function Section({
         <span className="section-header flex items-center gap-2">
           {title}
         </span>
-        <span className="toggle-indicator text-[#8892a8] text-xs transition-transform duration-300"
+        <span
+          className="toggle-indicator text-[#8892a8] text-xs transition-transform duration-300"
           style={{ transform: isOpen ? 'rotate(90deg)' : 'rotate(0deg)' }}
         >
           ▶
@@ -364,7 +446,7 @@ export default function ProfilePage() {
     'PARSING 3,954 CONVERSATIONS...',
     'ANALYZING 9.8M WORDS...',
     'MAPPING COGNITIVE PROFILE...',
-    'QUANTUM STATE: SUPERPOSITION',
+    'CALIBRATING RADAR ARRAY...',
     'CHARACTER LOADED.',
   ];
 
@@ -394,8 +476,6 @@ export default function ProfilePage() {
     setOpenSections(prev => ({ ...prev, [key]: !prev[key] }));
   }, []);
 
-  const xpPct = (CHARACTER.xp.current / CHARACTER.xp.next) * 100;
-
   if (!booted) {
     return (
       <div className="boot-screen">
@@ -424,7 +504,7 @@ export default function ProfilePage() {
 
       <div className="max-w-2xl mx-auto px-4 pt-8 space-y-4">
 
-        {/* ═══ HERO: CHARACTER CARD ═══ */}
+        {/* ═══ 1. HERO: CHARACTER CARD + RADAR ═══ */}
         <div className="rpg-panel rpg-panel-gold p-6 animate-fade-in-up">
           <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
             <div className="shrink-0">
@@ -449,27 +529,13 @@ export default function ProfilePage() {
                 </div>
               </div>
 
-              <div className="space-y-1">
-                <div className="flex items-center justify-center sm:justify-start gap-2">
-                  <span
-                    className="text-[9px]"
-                    style={{ fontFamily: 'var(--font-press-start)', color: 'var(--text-gold)' }}
-                  >
-                    Lv.{CHARACTER.level}
-                  </span>
-                  <span className="text-[10px] text-[#8892a8]">
-                    {(CHARACTER.xp.current / 1000000).toFixed(1)}M / {(CHARACTER.xp.next / 1000000).toFixed(1)}M XP
-                  </span>
-                </div>
-                <div className="stat-bar-track w-full max-w-xs mx-auto sm:mx-0 border border-[#2a3050]">
-                  <div
-                    className="stat-bar-fill"
-                    style={{
-                      width: statsAnimated ? `${xpPct}%` : '0%',
-                      background: 'linear-gradient(90deg, #c8a84ecc, #c8a84e)',
-                    }}
-                  />
-                </div>
+              <div className="flex items-center justify-center sm:justify-start gap-2">
+                <span
+                  className="text-[9px]"
+                  style={{ fontFamily: 'var(--font-press-start)', color: 'var(--text-gold)' }}
+                >
+                  Lv.{CHARACTER.level}
+                </span>
               </div>
 
               <p className="text-[10px] text-[#8892a8] leading-relaxed max-w-md">
@@ -477,62 +543,94 @@ export default function ProfilePage() {
               </p>
             </div>
           </div>
+
+          {/* Radar Chart */}
+          <div className="mt-6 flex justify-center">
+            <RadarChart attributes={ATTRIBUTES} animate={statsAnimated} />
+          </div>
         </div>
 
-        {/* ═══ COMBAT STATS ═══ */}
+        {/* ═══ 2. CORE ATTRIBUTES DETAIL ═══ */}
         <div className="rpg-panel p-4 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
-          <h2 className="section-header mb-4">◆ Combat Statistics</h2>
-          <div className="space-y-2.5">
-            {STATS.map(stat => (
-              <StatBar key={stat.abbr} stat={stat} animate={statsAnimated} />
+          <h2 className="section-header mb-4">◆ Core Attributes</h2>
+          <div className="space-y-3">
+            {ATTRIBUTES.map(attr => (
+              <div key={attr.abbr} className="flex items-start gap-3">
+                <span
+                  className="w-12 text-[9px] font-bold shrink-0 pt-0.5"
+                  style={{ color: attr.color, fontFamily: 'var(--font-press-start)' }}
+                >
+                  {attr.abbr}
+                </span>
+                <div className="flex-1">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-[11px] text-[#e8dcc8] font-bold">{attr.label}</span>
+                    <span className="text-[10px] text-[#8892a8] tabular-nums">{attr.value}/{attr.max}</span>
+                  </div>
+                  <div className="stat-bar-track border border-[#2a3050] mb-1">
+                    <div
+                      className="stat-bar-fill"
+                      style={{
+                        width: statsAnimated ? `${(attr.value / attr.max) * 100}%` : '0%',
+                        background: `linear-gradient(90deg, ${attr.color}cc, ${attr.color})`,
+                      }}
+                    />
+                  </div>
+                  <p className="text-[9px] text-[#8892a8] leading-relaxed">{attr.description}</p>
+                </div>
+              </div>
             ))}
           </div>
           <div className="mt-3 text-[10px] text-[#8892a8] flex items-center gap-1">
             <span className="inline-block w-2 h-2 bg-[#8b5cf6] opacity-50" />
-            Scale: 0-40 (Fire Emblem standard)
+            Scale: 0-40 | Top-heavy profile — cognitive strengths, execution gaps
           </div>
         </div>
 
-        {/* ═══ ELEMENTAL AFFINITIES ═══ */}
-        <Section title="◇ Elemental Affinities" sectionKey="affinities" openSections={openSections} toggle={toggle}>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {AFFINITIES.map(a => (
-              <div key={a.element} className="flex items-center gap-3 rpg-panel p-3">
-                <span className="text-2xl">{a.icon}</span>
-                <div className="flex-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-bold" style={{ color: a.color }}>{a.element}</span>
-                    <span className="text-[10px] text-[#8892a8]">{a.strength}%</span>
-                  </div>
-                  <div className="text-[9px] text-[#8892a8]">{a.description}</div>
-                  <div className="stat-bar-track mt-1 h-1.5 border border-[#2a3050]">
-                    <div
-                      className="h-full transition-all duration-1000"
-                      style={{ width: `${a.strength}%`, background: a.color }}
-                    />
-                  </div>
-                </div>
+        {/* ═══ 3. OPERATING MANUAL ═══ */}
+        <Section title="◇ Operating Manual" sectionKey="manual" openSections={openSections} toggle={toggle}>
+          <div className="mb-3 text-[10px] text-[#22d3ee] border border-[#22d3ee]/20 bg-[#22d3ee]/5 p-2">
+            A personal user manual for collaborators, teammates, and future self.
+          </div>
+          <div className="space-y-4">
+            {MANUAL_SECTIONS.map(section => (
+              <div key={section.title} className="rpg-panel p-3">
+                <h3
+                  className="text-[9px] tracking-wider uppercase mb-2 flex items-center gap-2"
+                  style={{ fontFamily: 'var(--font-press-start)', color: '#dcc06e' }}
+                >
+                  <span className="text-[#8b5cf6]">{section.icon}</span>
+                  {section.title}
+                </h3>
+                <ul className="space-y-1.5">
+                  {section.content.map((line, i) => (
+                    <li key={i} className="text-[10px] text-[#e8dcc8] leading-relaxed flex items-start gap-2">
+                      <span className="text-[#2a3050] shrink-0 mt-0.5">›</span>
+                      {line}
+                    </li>
+                  ))}
+                </ul>
               </div>
             ))}
           </div>
         </Section>
 
-        {/* ═══ STATUS EFFECTS ═══ */}
-        <Section title="◇ Active Status Effects" sectionKey="status" openSections={openSections} toggle={toggle}>
-          <div className="space-y-2">
+        {/* ═══ 4. ACTIVE CONDITIONS ═══ */}
+        <Section title="◇ Active Conditions" sectionKey="conditions" openSections={openSections} toggle={toggle}>
+          <div className="space-y-3">
             <h3 className="text-[9px] text-[#22c55e] tracking-widest uppercase" style={{ fontFamily: 'var(--font-press-start)' }}>
               Buffs
             </h3>
             <div className="grid grid-cols-1 gap-2">
-              {STATUS_EFFECTS.filter(s => s.type === 'buff').map(effect => (
-                <div key={effect.name} className="status-card rpg-panel p-3 flex items-start gap-3 border-l-2 border-l-[#22c55e]">
-                  <span className="text-lg shrink-0">{effect.icon}</span>
+              {CONDITIONS.filter(c => c.type === 'buff').map(cond => (
+                <div key={cond.name} className="status-card rpg-panel p-3 flex items-start gap-3 border-l-2 border-l-[#22c55e]">
+                  <span className="text-lg shrink-0">{cond.icon}</span>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between gap-2">
-                      <span className="text-[10px] font-bold text-[#22c55e]">{effect.name}</span>
-                      <span className="text-[9px] text-[#8892a8] shrink-0">{effect.intensity}</span>
+                      <span className="text-[10px] font-bold text-[#22c55e]">{cond.name}</span>
                     </div>
-                    <p className="text-[9px] text-[#8892a8] mt-0.5">{effect.description}</p>
+                    <p className="text-[9px] text-[#e8dcc8] mt-0.5">{cond.description}</p>
+                    <p className="text-[8px] text-[#8892a8] mt-1 italic">Source: {cond.source}</p>
                   </div>
                 </div>
               ))}
@@ -542,15 +640,15 @@ export default function ProfilePage() {
               Debuffs
             </h3>
             <div className="grid grid-cols-1 gap-2">
-              {STATUS_EFFECTS.filter(s => s.type === 'debuff').map(effect => (
-                <div key={effect.name} className="status-card rpg-panel p-3 flex items-start gap-3 border-l-2 border-l-[#ef4444]">
-                  <span className="text-lg shrink-0">{effect.icon}</span>
+              {CONDITIONS.filter(c => c.type === 'debuff').map(cond => (
+                <div key={cond.name} className="status-card rpg-panel p-3 flex items-start gap-3 border-l-2 border-l-[#ef4444]">
+                  <span className="text-lg shrink-0">{cond.icon}</span>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between gap-2">
-                      <span className="text-[10px] font-bold text-[#ef4444]">{effect.name}</span>
-                      <span className="text-[9px] text-[#8892a8] shrink-0">{effect.intensity}</span>
+                      <span className="text-[10px] font-bold text-[#ef4444]">{cond.name}</span>
                     </div>
-                    <p className="text-[9px] text-[#8892a8] mt-0.5">{effect.description}</p>
+                    <p className="text-[9px] text-[#e8dcc8] mt-0.5">{cond.description}</p>
+                    <p className="text-[8px] text-[#8892a8] mt-1 italic">Source: {cond.source}</p>
                   </div>
                 </div>
               ))}
@@ -558,48 +656,127 @@ export default function ProfilePage() {
           </div>
         </Section>
 
-        {/* ═══ SKILL TREE ═══ */}
-        <Section title="◇ Skill Tree" sectionKey="skills" openSections={openSections} toggle={toggle}>
+        {/* ═══ 5. CAPABILITY MAP ═══ */}
+        <Section title="◇ Capability Map" sectionKey="capabilities" openSections={openSections} toggle={toggle}>
           <div className="space-y-5">
-            {SKILL_TREE.map(branch => (
-              <div key={branch.name}>
+            {CAPABILITIES.map(domain => (
+              <div key={domain.domain}>
                 <div className="flex items-center gap-2 mb-2">
-                  <span style={{ color: branch.color }}>{branch.icon}</span>
-                  <span className="text-[10px] font-bold" style={{ color: branch.color }}>
-                    {branch.name}
+                  <span style={{ color: domain.color }}>{domain.icon}</span>
+                  <span className="text-[10px] font-bold" style={{ color: domain.color }}>
+                    {domain.domain}
                   </span>
                 </div>
                 <div className="space-y-2 ml-5">
-                  {branch.skills.map(skill => (
-                    <div key={skill.name} className="group">
-                      <div className="flex items-center justify-between gap-2">
-                        <span className="text-[11px] text-[#e8dcc8]">{skill.name}</span>
-                        <div className="flex items-center gap-2">
-                          <SkillPips level={skill.level} maxLevel={skill.maxLevel} color={branch.color} />
-                          <span className="text-[9px] text-[#8892a8] w-8 text-right tabular-nums">
-                            {skill.level}/{skill.maxLevel}
-                          </span>
+                  {domain.capabilities.map(cap => (
+                    <div key={cap.name} className="flex items-start justify-between gap-2">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="text-[11px] text-[#e8dcc8]">{cap.name}</span>
+                          <ProficiencyBadge level={cap.level} />
                         </div>
+                        <p className="text-[9px] text-[#8892a8] mt-0.5">{cap.evidence}</p>
                       </div>
-                      <p className="text-[9px] text-[#8892a8] mt-0.5 hidden group-hover:block">
-                        {skill.description}
-                      </p>
                     </div>
                   ))}
                 </div>
               </div>
             ))}
           </div>
-          <div className="mt-3 text-[10px] text-[#8892a8] flex items-center gap-1">
-            <span className="inline-block w-2 h-2 bg-[#8b5cf6] opacity-50" />
-            Hover skills for descriptions
+        </Section>
+
+        {/* ═══ 6. CHARACTER DYNAMICS (Sealed) ═══ */}
+        <Section title="◈ Character Dynamics" sectionKey="dynamics" openSections={openSections} toggle={toggle} sealed>
+          <div className="mb-3 text-[10px] text-[#8b5cf6] border border-[#8b5cf6]/20 bg-[#8b5cf6]/5 p-2">
+            ◈ SEALED — The five internal tensions that define this character&apos;s inner architecture.
+          </div>
+          <div className="space-y-5">
+            {DYNAMICS.map(d => (
+              <div key={d.name}>
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-[10px] font-bold text-[#e8dcc8]">{d.name}</span>
+                  <span className={`text-[8px] px-1.5 py-0.5 ${
+                    d.severity === 'critical'
+                      ? 'bg-[#ef4444]/20 text-[#ef4444] border border-[#ef4444]/30'
+                      : d.severity === 'high'
+                      ? 'bg-[#f59e0b]/20 text-[#f59e0b] border border-[#f59e0b]/30'
+                      : 'bg-[#3b82f6]/20 text-[#3b82f6] border border-[#3b82f6]/30'
+                  }`}>
+                    {d.severity.toUpperCase()}
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-[8px] text-[#22d3ee] w-20 sm:w-24 text-right shrink-0">{d.sideA}</span>
+                  <div className="flex-1 relative">
+                    <div className="tension-bar" />
+                    <div className="tension-marker" style={{ left: `${d.position}%` }} />
+                  </div>
+                  <span className="text-[8px] text-[#8b5cf6] w-20 sm:w-24 shrink-0">{d.sideB}</span>
+                </div>
+
+                <div className="flex items-center justify-between text-[8px] text-[#8892a8] mb-1">
+                  <span>{d.conversationsA} convos</span>
+                  <span>{d.conversationsB} convos</span>
+                </div>
+                <p className="text-[9px] text-[#8892a8]">{d.description}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Saboteur Cycle */}
+          <div className="mt-6 pt-4 border-t border-[#2a3050]">
+            <h3
+              className="text-[9px] text-[#ef4444] tracking-widest uppercase mb-3"
+              style={{ fontFamily: 'var(--font-press-start)' }}
+            >
+              ⚠ Saboteur Cycle
+            </h3>
+            <div className="space-y-2">
+              {SABOTEUR_CYCLE.map((s, i) => (
+                <div key={s.name} className="flex items-center gap-3">
+                  <div className="flex items-center gap-1 shrink-0 w-28">
+                    <span className="text-[10px] text-[#e8dcc8] font-bold">{s.name}</span>
+                    <span className="text-[9px] text-[#ef4444]">{s.score}</span>
+                  </div>
+                  <div className="flex-1 flex items-center gap-2">
+                    <div className="stat-bar-track flex-1 border border-[#2a3050] h-2">
+                      <div
+                        className="h-full transition-all duration-1000"
+                        style={{
+                          width: `${(s.score / 10) * 100}%`,
+                          background: `linear-gradient(90deg, #ef4444cc, #ef4444)`,
+                        }}
+                      />
+                    </div>
+                  </div>
+                  {i < SABOTEUR_CYCLE.length - 1 && (
+                    <span className="text-[8px] text-[#8892a8]">→</span>
+                  )}
+                </div>
+              ))}
+            </div>
+            <div className="mt-2 text-[9px] text-[#8892a8] italic">
+              Cycle: Restless starts → Hyper-Rational justifies → Hyper-Achiever pushes → Controller rebuilds → repeat
+            </div>
           </div>
         </Section>
 
-        {/* ═══ CLASS EVOLUTION ═══ */}
-        <Section title="◇ Class Evolution" sectionKey="evolution" openSections={openSections} toggle={toggle}>
-          <div className="space-y-0">
-            {EVOLUTION_PATH.map((stage) => (
+        {/* ═══ 7. GROWTH PATH (Sealed) ═══ */}
+        <Section title="◈ Growth Path" sectionKey="growth" openSections={openSections} toggle={toggle} sealed>
+          <div className="mb-3 text-[10px] text-[#8b5cf6] border border-[#8b5cf6]/20 bg-[#8b5cf6]/5 p-2">
+            ◈ SEALED — Evolution timeline, philosophical loadout, and requirements to advance.
+          </div>
+
+          {/* Evolution Timeline */}
+          <h3
+            className="text-[9px] text-[#dcc06e] tracking-widest uppercase mb-3"
+            style={{ fontFamily: 'var(--font-press-start)' }}
+          >
+            Class Evolution
+          </h3>
+          <div className="space-y-0 mb-6">
+            {EVOLUTION.map((stage) => (
               <div
                 key={stage.name}
                 className={`evolution-node ${stage.active ? 'active' : ''} pb-4`}
@@ -654,85 +831,36 @@ export default function ProfilePage() {
               </div>
             ))}
           </div>
-        </Section>
 
-        {/* ═══ COGNITIVE TENSION MAP (Sealed) ═══ */}
-        <Section title="◈ Cognitive Tension Map" sectionKey="tensions" openSections={openSections} toggle={toggle} sealed>
-          <div className="mb-3 text-[10px] text-[#8b5cf6] border border-[#8b5cf6]/20 bg-[#8b5cf6]/5 p-2">
-            ◈ SEALED ANALYSIS — The five internal contradictions that define this character&apos;s inner conflict.
-          </div>
-          <div className="space-y-5">
-            {TENSIONS.map(t => (
-              <div key={t.name}>
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-[10px] font-bold text-[#e8dcc8]">{t.name}</span>
-                  <span className={`text-[8px] px-1.5 py-0.5 ${
-                    t.severity === 'critical'
-                      ? 'bg-[#ef4444]/20 text-[#ef4444] border border-[#ef4444]/30'
-                      : t.severity === 'high'
-                      ? 'bg-[#f59e0b]/20 text-[#f59e0b] border border-[#f59e0b]/30'
-                      : 'bg-[#3b82f6]/20 text-[#3b82f6] border border-[#3b82f6]/30'
-                  }`}>
-                    {t.severity.toUpperCase()}
-                  </span>
-                </div>
-
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-[8px] text-[#22d3ee] w-20 sm:w-24 text-right shrink-0">{t.sideA}</span>
-                  <div className="flex-1 relative">
-                    <div className="tension-bar" />
-                    <div className="tension-marker" style={{ left: `${t.position}%` }} />
-                  </div>
-                  <span className="text-[8px] text-[#8b5cf6] w-20 sm:w-24 shrink-0">{t.sideB}</span>
-                </div>
-
-                <div className="flex items-center justify-between text-[8px] text-[#8892a8] mb-1">
-                  <span>{t.conversationsA} convos</span>
-                  <span>Ratio: {t.ratio}</span>
-                  <span>{t.conversationsB} convos</span>
-                </div>
-                <p className="text-[9px] text-[#8892a8]">{t.description}</p>
-              </div>
-            ))}
-          </div>
-        </Section>
-
-        {/* ═══ PHILOSOPHICAL ARSENAL (Sealed) ═══ */}
-        <Section title="◈ Philosophical Arsenal" sectionKey="loadout" openSections={openSections} toggle={toggle} sealed>
-          <div className="mb-3 text-[10px] text-[#8b5cf6] border border-[#8b5cf6]/20 bg-[#8b5cf6]/5 p-2">
-            ◈ EQUIPPED FRAMEWORKS — The intellectual operating system that shapes all analysis.
-          </div>
-          <div className="space-y-2">
-            {LOADOUT.map(item => (
-              <div key={item.slot} className="equip-slot p-3 flex items-center gap-3">
-                <span
-                  className="text-[7px] w-12 text-center py-0.5 shrink-0 border"
-                  style={{
-                    fontFamily: 'var(--font-press-start)',
-                    color: item.color,
-                    borderColor: `${item.color}40`,
-                    background: `${item.color}10`,
-                  }}
-                >
-                  {item.slot}
+          {/* Philosophical Loadout */}
+          <h3
+            className="text-[9px] text-[#dcc06e] tracking-widest uppercase mb-3"
+            style={{ fontFamily: 'var(--font-press-start)' }}
+          >
+            Equipped Frameworks
+          </h3>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-6">
+            {PHILOSOPHICAL_LOADOUT.map(item => (
+              <div
+                key={item.name}
+                className="rpg-panel p-2 text-center"
+                style={{ borderColor: `${item.color}30` }}
+              >
+                <span className="text-[10px] font-bold block" style={{ color: item.color }}>
+                  {item.name}
                 </span>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-bold" style={{ color: item.color }}>{item.name}</span>
-                    <span className="text-[9px] text-[#8892a8]">{item.uses} uses</span>
-                  </div>
-                  <p className="text-[9px] text-[#8892a8] mt-0.5">{item.description}</p>
-                </div>
+                <span className="text-[8px] text-[#8892a8]">{item.uses} convos</span>
               </div>
             ))}
           </div>
-        </Section>
 
-        {/* ═══ EVOLUTION REQUIREMENTS (Sealed) ═══ */}
-        <Section title="◈ Next Evolution Requirements" sectionKey="requirements" openSections={openSections} toggle={toggle} sealed>
-          <div className="mb-3 text-[10px] text-[#8b5cf6] border border-[#8b5cf6]/20 bg-[#8b5cf6]/5 p-2">
-            ◈ CLASSIFIED — Requirements to evolve from Quantum Architect to Sovereign Synthesizer.
-          </div>
+          {/* Evolution Requirements */}
+          <h3
+            className="text-[9px] text-[#dcc06e] tracking-widest uppercase mb-3"
+            style={{ fontFamily: 'var(--font-press-start)' }}
+          >
+            Evolution Requirements
+          </h3>
           <div className="space-y-2">
             {EVOLUTION_REQUIREMENTS.map((req, i) => (
               <div key={i} className="flex items-center gap-3">
@@ -760,10 +888,10 @@ export default function ProfilePage() {
             Character data derived from 3,954 conversations | ~9.8M words | 1,076 days
           </p>
           <p className="text-[8px] text-[#8892a8]">
-            ChatGPT (1,856 convos) + Claude (2,098 convos) + Second Brain (35 files)
+            ChatGPT (1,856) + Claude (2,098) + Second Brain (35 files)
           </p>
           <p className="text-[8px] text-[#8892a8] mt-2">
-            Frameworks: LIWC · Big Five · McClelland · McAdams · Festinger · Stryker/Burke
+            Frameworks: LIWC · Big Five · McClelland · McAdams · PrinciplesYou · Saboteur Assessment
           </p>
         </div>
 
@@ -773,7 +901,7 @@ export default function ProfilePage() {
             className="text-[8px] text-[#8892a8] tracking-widest"
             style={{ fontFamily: 'var(--font-press-start)' }}
           >
-            JKURN v0.1 — CHARACTER PROFILE SYSTEM
+            JKURN v0.2 — CHARACTER PROFILE SYSTEM
           </p>
         </div>
       </div>
