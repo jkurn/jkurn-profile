@@ -1,16 +1,16 @@
 @import "tailwindcss";
 
 :root {
-  /* Zinc neutral dark palette */
-  --bg-dark: #09090b;
-  --bg-surface: #18181b;
-  --bg-elevated: #27272a;
-  --border-subtle: rgba(255, 255, 255, 0.06);
-  --border-medium: rgba(255, 255, 255, 0.1);
+  /* Warm offwhite palette */
+  --bg-dark: #F6F5EF;
+  --bg-surface: #FFFFFF;
+  --bg-elevated: #EFEEEA;
+  --border-subtle: rgba(0, 0, 0, 0.06);
+  --border-medium: rgba(0, 0, 0, 0.10);
 
   /* Text */
-  --text-primary: #fafafa;
-  --text-secondary: #a1a1aa;
+  --text-primary: #1a1a1a;
+  --text-secondary: #52525b;
   --text-muted: #71717a;
 
   /* Brand teal */
@@ -76,7 +76,7 @@ body {
 
 /* Stat bars */
 .stat-bar-track {
-  background: #18181b;
+  background: #E2E1DC;
   position: relative;
   overflow: hidden;
 }

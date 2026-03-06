@@ -88,7 +88,7 @@ export default function RadarChart({ attributes, size = 280, animate = true }: R
           key={fraction}
           points={ringPoints(fraction)}
           fill="none"
-          stroke="rgba(255,255,255,0.08)"
+          stroke="rgba(0,0,0,0.10)"
           strokeWidth="1"
           opacity={fraction === 1 ? 0.8 : 0.4}
         />
@@ -104,7 +104,7 @@ export default function RadarChart({ attributes, size = 280, animate = true }: R
             y1={cy}
             x2={p.x}
             y2={p.y}
-            stroke="rgba(255,255,255,0.06)"
+            stroke="rgba(0,0,0,0.08)"
             strokeWidth="1"
           />
         );
@@ -133,7 +133,7 @@ export default function RadarChart({ attributes, size = 280, animate = true }: R
             cy={mounted ? p.y : cy}
             r="3"
             fill={attr.color}
-            stroke="#09090b"
+            stroke="#F6F5EF"
             strokeWidth="1"
             style={{
               transition: 'all 1.2s cubic-bezier(0.4, 0, 0.2, 1)',
@@ -175,7 +175,7 @@ export default function RadarChart({ attributes, size = 280, animate = true }: R
               y={ly}
               textAnchor={anchor}
               dy={parseFloat(dy) + 1.2 + 'em'}
-              fill="#a1a1aa"
+              fill="#71717a"
               fontSize="10"
               fontFamily="var(--font-geist-mono), monospace"
             >

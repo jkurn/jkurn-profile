@@ -426,7 +426,7 @@ export default function ProfilePage() {
             <div className="flex-1 min-w-0 space-y-3">
               <h1
                 className="text-base sm:text-lg tracking-wide leading-tight"
-                style={{ fontFamily: 'var(--font-press-start)', color: '#fafafa' }}
+                style={{ fontFamily: 'var(--font-press-start)', color: '#1a1a1a' }}
               >
                 {CHARACTER.name}
               </h1>
@@ -435,24 +435,24 @@ export default function ProfilePage() {
                 <span className="text-sm px-3 py-1 rounded-full border border-[rgba(0,128,128,0.3)] bg-[rgba(0,128,128,0.08)] text-[#00a0a0]">
                   {CHARACTER.title}
                 </span>
-                <span className="text-sm px-3 py-1 rounded-full border border-[rgba(0,128,128,0.2)] bg-[rgba(0,128,128,0.05)] text-[#a1a1aa]">
+                <span className="text-sm px-3 py-1 rounded-full border border-[rgba(0,128,128,0.2)] bg-[rgba(0,128,128,0.05)] text-[#52525b]">
                   {CHARACTER.subclass}
                 </span>
               </div>
 
-              <p className="text-[15px] text-[#a1a1aa] leading-relaxed max-w-lg">
+              <p className="text-[15px] text-[#52525b] leading-relaxed max-w-lg">
                 {CHARACTER.bio}
               </p>
 
               <div className="flex items-center gap-3">
                 <span
-                  className="text-xs shrink-0 text-[#a1a1aa]"
+                  className="text-xs shrink-0 text-[#52525b]"
                   style={{ fontFamily: 'var(--font-geist-mono)' }}
                 >
                   Lv.{CHARACTER.level}
                 </span>
                 <div className="flex items-center gap-2 flex-1 max-w-[240px]">
-                  <div className="stat-bar-track flex-1 h-2 rounded-full overflow-hidden border border-[rgba(255,255,255,0.06)]">
+                  <div className="stat-bar-track flex-1 h-2 rounded-full overflow-hidden border border-[rgba(0,0,0,0.06)]">
                     <div
                       className="stat-bar-fill rounded-full"
                       style={{
@@ -495,7 +495,7 @@ export default function ProfilePage() {
 
             {/* Core Attributes */}
             <div className="card p-6 sm:p-8">
-              <h2 className="text-lg font-semibold mb-6 text-[#fafafa]">Core Attributes</h2>
+              <h2 className="text-lg font-semibold mb-6 text-[#1a1a1a]">Core Attributes</h2>
               <div className="space-y-5">
                 {ATTRIBUTES.map(attr => (
                   <div key={attr.abbr} className="flex items-start gap-4">
@@ -507,12 +507,12 @@ export default function ProfilePage() {
                     </span>
                     <div className="flex-1">
                       <div className="flex items-center justify-between mb-1.5">
-                        <span className="text-[15px] font-medium text-[#fafafa]">{attr.label}</span>
+                        <span className="text-[15px] font-medium text-[#1a1a1a]">{attr.label}</span>
                         <span className="text-sm text-[#71717a] tabular-nums" style={{ fontFamily: 'var(--font-geist-mono)' }}>
                           {attr.value}/{attr.max}
                         </span>
                       </div>
-                      <div className="stat-bar-track h-2 rounded-full overflow-hidden border border-[rgba(255,255,255,0.06)] mb-2">
+                      <div className="stat-bar-track h-2 rounded-full overflow-hidden border border-[rgba(0,0,0,0.06)] mb-2">
                         <div
                           className="stat-bar-fill rounded-full"
                           style={{
@@ -521,7 +521,7 @@ export default function ProfilePage() {
                           }}
                         />
                       </div>
-                      <p className="text-[14px] text-[#a1a1aa] leading-relaxed">{attr.description}</p>
+                      <p className="text-[14px] text-[#52525b] leading-relaxed">{attr.description}</p>
                     </div>
                   </div>
                 ))}
@@ -538,20 +538,20 @@ export default function ProfilePage() {
           <div className="tab-content space-y-8">
             {/* Operating Manual */}
             <div className="card p-6 sm:p-8">
-              <h2 className="text-lg font-semibold mb-2 text-[#fafafa]">Operating Manual</h2>
-              <p className="text-sm text-[#a1a1aa] mb-6">
+              <h2 className="text-lg font-semibold mb-2 text-[#1a1a1a]">Operating Manual</h2>
+              <p className="text-sm text-[#52525b] mb-6">
                 A personal user manual for collaborators, teammates, and future self.
               </p>
               <div className="space-y-6">
                 {MANUAL_SECTIONS.map(section => (
                   <div key={section.title} className="card-elevated p-5 sm:p-6">
-                    <h3 className="text-[15px] font-semibold mb-3 flex items-center gap-2 text-[#fafafa]">
+                    <h3 className="text-[15px] font-semibold mb-3 flex items-center gap-2 text-[#1a1a1a]">
                       <span className="text-[#00a0a0]">{section.icon}</span>
                       {section.title}
                     </h3>
                     <ul className="space-y-2.5">
                       {section.content.map((line, i) => (
-                        <li key={i} className="text-[14px] text-[#a1a1aa] leading-relaxed flex items-start gap-3">
+                        <li key={i} className="text-[14px] text-[#52525b] leading-relaxed flex items-start gap-3">
                           <span className="text-[#71717a] shrink-0 mt-0.5">—</span>
                           {line}
                         </li>
@@ -564,7 +564,7 @@ export default function ProfilePage() {
 
             {/* Active Conditions — NO hover states */}
             <div className="card p-6 sm:p-8">
-              <h2 className="text-lg font-semibold mb-6 text-[#fafafa]">Active Conditions</h2>
+              <h2 className="text-lg font-semibold mb-6 text-[#1a1a1a]">Active Conditions</h2>
 
               <h3 className="text-sm font-semibold text-[#22c55e] uppercase tracking-wider mb-3">Buffs</h3>
               <div className="space-y-3 mb-8">
@@ -573,7 +573,7 @@ export default function ProfilePage() {
                     <span className="text-xl shrink-0">{cond.icon}</span>
                     <div className="flex-1 min-w-0">
                       <span className="text-[15px] font-medium text-[#22c55e]">{cond.name}</span>
-                      <p className="text-[14px] text-[#a1a1aa] mt-1">{cond.description}</p>
+                      <p className="text-[14px] text-[#52525b] mt-1">{cond.description}</p>
                       <p className="text-[13px] text-[#71717a] mt-1.5 italic">Source: {cond.source}</p>
                     </div>
                   </div>
@@ -587,7 +587,7 @@ export default function ProfilePage() {
                     <span className="text-xl shrink-0">{cond.icon}</span>
                     <div className="flex-1 min-w-0">
                       <span className="text-[15px] font-medium text-[#ef4444]">{cond.name}</span>
-                      <p className="text-[14px] text-[#a1a1aa] mt-1">{cond.description}</p>
+                      <p className="text-[14px] text-[#52525b] mt-1">{cond.description}</p>
                       <p className="text-[13px] text-[#71717a] mt-1.5 italic">Source: {cond.source}</p>
                     </div>
                   </div>
@@ -601,7 +601,7 @@ export default function ProfilePage() {
         {activeTab === 'skills' && (
           <div className="tab-content space-y-8">
             <div className="card p-6 sm:p-8">
-              <h2 className="text-lg font-semibold mb-6 text-[#fafafa]">Capability Map</h2>
+              <h2 className="text-lg font-semibold mb-6 text-[#1a1a1a]">Capability Map</h2>
               <div className="space-y-8">
                 {CAPABILITIES.map(domain => (
                   <div key={domain.domain}>
@@ -616,10 +616,10 @@ export default function ProfilePage() {
                         <div key={cap.name} className="flex items-start justify-between gap-3">
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2.5 flex-wrap">
-                              <span className="text-[15px] text-[#fafafa]">{cap.name}</span>
+                              <span className="text-[15px] text-[#1a1a1a]">{cap.name}</span>
                               <ProficiencyBadge level={cap.level} />
                             </div>
-                            <p className="text-[14px] text-[#a1a1aa] mt-1">{cap.evidence}</p>
+                            <p className="text-[14px] text-[#52525b] mt-1">{cap.evidence}</p>
                           </div>
                         </div>
                       ))}
@@ -636,7 +636,7 @@ export default function ProfilePage() {
           <div className="tab-content space-y-8">
             {/* Character Dynamics */}
             <div className="card p-6 sm:p-8">
-              <h2 className="text-lg font-semibold mb-2 text-[#fafafa]">Character Dynamics</h2>
+              <h2 className="text-lg font-semibold mb-2 text-[#1a1a1a]">Character Dynamics</h2>
               <p className="text-sm text-[#00a0a0] border border-[rgba(0,128,128,0.2)] bg-[rgba(0,128,128,0.05)] rounded-lg px-4 py-2.5 mb-6">
                 The ongoing internal debates. Everyone has them — these are mine.
               </p>
@@ -644,7 +644,7 @@ export default function ProfilePage() {
                 {DYNAMICS.map(d => (
                   <div key={d.name}>
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-[15px] font-medium text-[#fafafa]">{d.name}</span>
+                      <span className="text-[15px] font-medium text-[#1a1a1a]">{d.name}</span>
                       <span className={`text-[11px] px-2 py-0.5 rounded-full ${
                         d.severity === 'critical'
                           ? 'bg-[rgba(239,68,68,0.12)] text-[#ef4444] border border-[rgba(239,68,68,0.25)]'
@@ -669,23 +669,23 @@ export default function ProfilePage() {
                       <span>{d.conversationsA} convos</span>
                       <span>{d.conversationsB} convos</span>
                     </div>
-                    <p className="text-[14px] text-[#a1a1aa]">{d.description}</p>
+                    <p className="text-[14px] text-[#52525b]">{d.description}</p>
                   </div>
                 ))}
               </div>
 
               {/* Saboteur Cycle */}
-              <div className="mt-8 pt-6 border-t border-[rgba(255,255,255,0.06)]">
+              <div className="mt-8 pt-6 border-t border-[rgba(0,0,0,0.06)]">
                 <h3 className="text-[15px] font-semibold text-[#ef4444] mb-4">⚠ Saboteur Cycle</h3>
                 <div className="space-y-3">
                   {SABOTEUR_CYCLE.map(s => (
                     <div key={s.name} className="flex items-center gap-3">
                       <div className="flex items-center gap-2 shrink-0 w-32">
-                        <span className="text-[14px] text-[#fafafa] font-medium">{s.name}</span>
+                        <span className="text-[14px] text-[#1a1a1a] font-medium">{s.name}</span>
                         <span className="text-[13px] text-[#ef4444]" style={{ fontFamily: 'var(--font-geist-mono)' }}>{s.score}</span>
                       </div>
                       <div className="flex-1">
-                        <div className="stat-bar-track h-2 rounded-full overflow-hidden border border-[rgba(255,255,255,0.06)]">
+                        <div className="stat-bar-track h-2 rounded-full overflow-hidden border border-[rgba(0,0,0,0.06)]">
                           <div
                             className="h-full rounded-full transition-all duration-1000"
                             style={{
@@ -706,7 +706,7 @@ export default function ProfilePage() {
 
             {/* Growth Path */}
             <div className="card p-6 sm:p-8">
-              <h2 className="text-lg font-semibold mb-6 text-[#fafafa]">Growth Path</h2>
+              <h2 className="text-lg font-semibold mb-6 text-[#1a1a1a]">Growth Path</h2>
 
               {/* Evolution Timeline */}
               <h3 className="text-[14px] font-semibold text-[#00a0a0] uppercase tracking-wider mb-4">Class Evolution</h3>
@@ -722,7 +722,7 @@ export default function ProfilePage() {
                           stage.active
                             ? 'border-[#00a0a0] bg-[rgba(0,160,160,0.15)] text-[#00a0a0]'
                             : stage.future
-                            ? 'border-[rgba(255,255,255,0.1)] bg-transparent text-[#71717a] border-dashed'
+                            ? 'border-[rgba(0,0,0,0.1)] bg-transparent text-[#71717a] border-dashed'
                             : 'border-[#22c55e] bg-[rgba(34,197,94,0.1)] text-[#22c55e]'
                         }`}
                       >
@@ -745,15 +745,15 @@ export default function ProfilePage() {
                             </span>
                           )}
                         </div>
-                        <p className="text-[14px] text-[#a1a1aa] mt-1">{stage.description}</p>
+                        <p className="text-[14px] text-[#52525b] mt-1">{stage.description}</p>
                         <div className="flex flex-wrap gap-1.5 mt-2">
                           {stage.traits.map((trait, ti) => (
                             <span
                               key={ti}
                               className={`text-[12px] px-2 py-0.5 rounded-full border ${
                                 stage.future
-                                  ? 'border-[rgba(255,255,255,0.06)] text-[#71717a] border-dashed'
-                                  : 'border-[rgba(255,255,255,0.1)] text-[#a1a1aa]'
+                                  ? 'border-[rgba(0,0,0,0.06)] text-[#71717a] border-dashed'
+                                  : 'border-[rgba(0,0,0,0.1)] text-[#52525b]'
                               }`}
                             >
                               {trait}
@@ -793,17 +793,17 @@ export default function ProfilePage() {
                     <span className={`w-6 h-6 shrink-0 flex items-center justify-center border rounded-md text-[12px] ${
                       req.done
                         ? 'border-[#22c55e] bg-[rgba(34,197,94,0.15)] text-[#22c55e]'
-                        : 'border-[rgba(255,255,255,0.1)] text-[#71717a]'
+                        : 'border-[rgba(0,0,0,0.1)] text-[#71717a]'
                     }`}>
                       {req.done ? '✓' : '○'}
                     </span>
-                    <span className={`text-[14px] ${req.done ? 'text-[#22c55e] line-through' : 'text-[#a1a1aa]'}`}>
+                    <span className={`text-[14px] ${req.done ? 'text-[#22c55e] line-through' : 'text-[#52525b]'}`}>
                       {req.text}
                     </span>
                   </div>
                 ))}
               </div>
-              <div className="mt-5 text-[14px] text-[#71717a] border-t border-[rgba(255,255,255,0.06)] pt-4">
+              <div className="mt-5 text-[14px] text-[#71717a] border-t border-[rgba(0,0,0,0.06)] pt-4">
                 <span className="text-[#f59e0b]">⚠</span> Progress: 0/5 requirements met. The wave function remains uncollapsed.
               </div>
             </div>
