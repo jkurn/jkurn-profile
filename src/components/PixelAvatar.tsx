@@ -41,27 +41,20 @@ const CHARACTER: string[] = [
   '...kccccccck..',  // 18 coat bottom
 ];
 
-const PIXEL_SIZE = 6;
+interface PixelAvatarProps {
+  pixelSize?: number;
+}
 
-export default function PixelAvatar() {
+export default function PixelAvatar({ pixelSize = 4 }: PixelAvatarProps) {
   const maxCols = Math.max(...CHARACTER.map(row => row.length));
 
   return (
     <div className="relative animate-float">
-      {/* Glow behind character */}
-      <div
-        className="absolute inset-0 animate-pulse-glow rounded-full"
-        style={{
-          background: 'radial-gradient(ellipse at center, rgba(139,92,246,0.15) 0%, transparent 70%)',
-          transform: 'scale(1.3)',
-        }}
-      />
-
       <svg
-        width={maxCols * PIXEL_SIZE}
-        height={CHARACTER.length * PIXEL_SIZE}
-        viewBox={`0 0 ${maxCols * PIXEL_SIZE} ${CHARACTER.length * PIXEL_SIZE}`}
-        className="pixel-glow relative z-10"
+        width={maxCols * pixelSize}
+        height={CHARACTER.length * pixelSize}
+        viewBox={`0 0 ${maxCols * pixelSize} ${CHARACTER.length * pixelSize}`}
+        className="relative z-10"
         style={{ imageRendering: 'pixelated' }}
       >
         {CHARACTER.map((row, y) =>
@@ -71,10 +64,10 @@ export default function PixelAvatar() {
             return (
               <rect
                 key={`${x}-${y}`}
-                x={x * PIXEL_SIZE}
-                y={y * PIXEL_SIZE}
-                width={PIXEL_SIZE}
-                height={PIXEL_SIZE}
+                x={x * pixelSize}
+                y={y * pixelSize}
+                width={pixelSize}
+                height={pixelSize}
                 fill={color}
               />
             );
@@ -82,8 +75,8 @@ export default function PixelAvatar() {
         )}
 
         {/* Glasses glint */}
-        <rect x={4 * PIXEL_SIZE} y={6 * PIXEL_SIZE} width={PIXEL_SIZE} height={1} fill="rgba(255,255,255,0.6)" />
-        <rect x={8 * PIXEL_SIZE} y={6 * PIXEL_SIZE} width={PIXEL_SIZE} height={1} fill="rgba(255,255,255,0.6)" />
+        <rect x={4 * pixelSize} y={6 * pixelSize} width={pixelSize} height={1} fill="rgba(255,255,255,0.6)" />
+        <rect x={8 * pixelSize} y={6 * pixelSize} width={pixelSize} height={1} fill="rgba(255,255,255,0.6)" />
       </svg>
     </div>
   );

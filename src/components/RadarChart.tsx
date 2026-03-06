@@ -26,7 +26,7 @@ export default function RadarChart({ attributes, size = 280, animate = true }: R
     }
   }, [animate]);
 
-  const padding = 40; // Extra space for labels
+  const padding = 40;
   const totalSize = size + padding * 2;
   const cx = totalSize / 2;
   const cy = totalSize / 2;
@@ -34,7 +34,6 @@ export default function RadarChart({ attributes, size = 280, animate = true }: R
   const labelRadius = size * 0.46;
   const n = attributes.length;
 
-  // Calculate point position on the radar
   const getPoint = (index: number, value: number, max: number, r: number) => {
     const angle = (Math.PI * 2 * index) / n - Math.PI / 2;
     const ratio = value / max;
@@ -43,7 +42,6 @@ export default function RadarChart({ attributes, size = 280, animate = true }: R
     return { x, y };
   };
 
-  // Generate polygon points for a given ring
   const ringPoints = (fraction: number) => {
     return attributes
       .map((_, i) => {
@@ -53,7 +51,6 @@ export default function RadarChart({ attributes, size = 280, animate = true }: R
       .join(' ');
   };
 
-  // Data polygon — animated from center to actual values
   const dataPoints = attributes
     .map((attr, i) => {
       const val = mounted ? attr.value : 0;
@@ -62,7 +59,6 @@ export default function RadarChart({ attributes, size = 280, animate = true }: R
     })
     .join(' ');
 
-  // Center point for animation start
   const centerPoints = attributes
     .map(() => `${cx},${cy}`)
     .join(' ');
@@ -81,8 +77,8 @@ export default function RadarChart({ attributes, size = 280, animate = true }: R
           <feComposite in="SourceGraphic" in2="blur" operator="over" />
         </filter>
         <radialGradient id="radarFill" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="#8b5cf6" stopOpacity="0.4" />
-          <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0.1" />
+          <stop offset="0%" stopColor="#00a0a0" stopOpacity="0.4" />
+          <stop offset="100%" stopColor="#008080" stopOpacity="0.1" />
         </radialGradient>
       </defs>
 
@@ -92,9 +88,9 @@ export default function RadarChart({ attributes, size = 280, animate = true }: R
           key={fraction}
           points={ringPoints(fraction)}
           fill="none"
-          stroke="#2a3050"
+          stroke="rgba(255,255,255,0.08)"
           strokeWidth="1"
-          opacity={fraction === 1 ? 0.6 : 0.3}
+          opacity={fraction === 1 ? 0.8 : 0.4}
         />
       ))}
 
@@ -108,9 +104,8 @@ export default function RadarChart({ attributes, size = 280, animate = true }: R
             y1={cy}
             x2={p.x}
             y2={p.y}
-            stroke="#2a3050"
+            stroke="rgba(255,255,255,0.06)"
             strokeWidth="1"
-            opacity="0.4"
           />
         );
       })}
@@ -119,7 +114,7 @@ export default function RadarChart({ attributes, size = 280, animate = true }: R
       <polygon
         points={mounted ? dataPoints : centerPoints}
         fill="url(#radarFill)"
-        stroke="#8b5cf6"
+        stroke="#00a0a0"
         strokeWidth="2"
         filter="url(#radarGlow)"
         style={{
@@ -138,7 +133,7 @@ export default function RadarChart({ attributes, size = 280, animate = true }: R
             cy={mounted ? p.y : cy}
             r="3"
             fill={attr.color}
-            stroke="#0a0b1a"
+            stroke="#09090b"
             strokeWidth="1"
             style={{
               transition: 'all 1.2s cubic-bezier(0.4, 0, 0.2, 1)',
@@ -153,12 +148,10 @@ export default function RadarChart({ attributes, size = 280, animate = true }: R
         const lx = cx + labelRadius * Math.cos(angle);
         const ly = cy + labelRadius * Math.sin(angle);
 
-        // Determine text anchor based on position
         let anchor: 'start' | 'middle' | 'end' = 'middle';
         if (Math.cos(angle) < -0.1) anchor = 'end';
         else if (Math.cos(angle) > 0.1) anchor = 'start';
 
-        // Adjust vertical position
         let dy = '0.35em';
         if (Math.sin(angle) < -0.5) dy = '0em';
         else if (Math.sin(angle) > 0.5) dy = '0.8em';
@@ -171,9 +164,9 @@ export default function RadarChart({ attributes, size = 280, animate = true }: R
               textAnchor={anchor}
               dy={dy}
               fill={attr.color}
-              fontSize="9"
-              fontFamily="var(--font-press-start), monospace"
-              fontWeight="bold"
+              fontSize="11"
+              fontFamily="var(--font-inter), system-ui, sans-serif"
+              fontWeight="600"
             >
               {attr.abbr}
             </text>
@@ -182,8 +175,8 @@ export default function RadarChart({ attributes, size = 280, animate = true }: R
               y={ly}
               textAnchor={anchor}
               dy={parseFloat(dy) + 1.2 + 'em'}
-              fill="#8892a8"
-              fontSize="8"
+              fill="#a1a1aa"
+              fontSize="10"
               fontFamily="var(--font-geist-mono), monospace"
             >
               {attr.value}/{attr.max}
