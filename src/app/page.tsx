@@ -11,7 +11,7 @@ const CHARACTER = {
   subclass: 'Manifesting Generator',
   level: 32,
   xp: { current: 9800000, next: 12000000 },
-  bio: 'Dual-mind operator — explores with divergent thought, executes with convergent precision. Builds frameworks across domains, then builds more frameworks about those frameworks.',
+  bio: 'Curious about everything, builder of things, connector of dots. Probably has a framework for that. Definitely has a framework for the framework.',
 };
 
 // ─── RADAR ATTRIBUTES (6-axis) ──────────────────────────────────
@@ -22,7 +22,7 @@ const ATTRIBUTES = [
     value: 38,
     max: 40,
     color: '#8b5cf6',
-    description: 'Creative ideation, conceptual thinking, and framework mastery. 98th percentile creative, 93rd conceptual, 97th curiosity. 9.8M words of evidence.',
+    description: 'Curious about everything, connects dots across fields that have no business being connected. Will happily disappear into a rabbit hole for hours.',
   },
   {
     label: 'Wisdom',
@@ -30,7 +30,7 @@ const ATTRIBUTES = [
     value: 30,
     max: 40,
     color: '#22d3ee',
-    description: 'Deep metacognition but undermined by Hyper-Rational saboteur (6.3). 11% empathetic — intellectualizes emotions instead of feeling them.',
+    description: 'Genuinely self-aware — sometimes too much. Tends to analyze feelings rather than actually feel them. Knows this, working on it.',
   },
   {
     label: 'Charisma',
@@ -38,7 +38,7 @@ const ATTRIBUTES = [
     value: 26,
     max: 40,
     color: '#ec4899',
-    description: '92% extraversion capacity, 98th percentile for inspiring others. But zero published content and vulnerability outsourced to AI.',
+    description: 'Lights up in conversations about ideas — surprisingly good at getting people excited. Still figuring out how to put himself out there publicly.',
   },
   {
     label: 'Constitution',
@@ -46,7 +46,7 @@ const ATTRIBUTES = [
     value: 24,
     max: 40,
     color: '#f59e0b',
-    description: '3,954 conversations prove mental endurance. But only 35% composed — burst conscientiousness, not sustained discipline.',
+    description: 'Can go deep on something for hours when it clicks. Sustained routine and discipline? That\'s a different conversation entirely.',
   },
   {
     label: 'Willpower',
@@ -54,7 +54,7 @@ const ATTRIBUTES = [
     value: 18,
     max: 40,
     color: '#ef4444',
-    description: '13% persistent, 12% dependable. Plans 1.7x more than executes. Restless saboteur (6.8) undermines follow-through.',
+    description: 'Great at starting things. Has approximately 47 open browser tabs of half-finished projects to prove it. The spirit is willing.',
   },
   {
     label: 'Strength',
@@ -62,7 +62,7 @@ const ATTRIBUTES = [
     value: 14,
     max: 40,
     color: '#f97316',
-    description: '80 body-related conversations, zero resolved. Physical health is the acknowledged, perennial gap.',
+    description: 'The gym membership is... aspirational. Honestly the stat that needs the most love. One day.',
   },
 ];
 
@@ -78,62 +78,62 @@ const MANUAL_SECTIONS: ManualEntry[] = [
     title: 'How I Think',
     icon: '◈',
     content: [
-      'Dual-mind operator — Exploration via ChatGPT (divergent), Execution via Claude (convergent).',
-      '70% of cognitive energy goes to exploration, 15% to implementation, 15% to reflection.',
-      'I think in frameworks. If a problem exists, I will build a system to understand it before solving it.',
-      'Pattern-first processor — I see connections across domains before I see individual details.',
+      'I\'m a pattern person. I naturally connect ideas across different fields — sometimes useful, sometimes I\'m three tangents deep before anyone notices.',
+      'Most of my thinking happens by exploring: reading, asking questions, building mental models. I need to see the full picture before I can act on any part of it.',
+      'Fair warning — if you give me a problem, I\'ll probably build a framework to understand it before actually solving it. It\'s just how my brain works.',
+      'I think better in writing than speaking. Give me a doc to respond to and you\'ll get my best thinking.',
     ],
   },
   {
     title: 'How I Communicate',
     icon: '◇',
     content: [
-      'Concise and directive. 66% of my messages are under 50 words.',
-      '96th percentile critical thinking, 80th percentile directness. I don\'t soften feedback.',
-      'I lead with "why" and expect others to fill in "how." If I\'m giving you the how, you\'re new.',
-      'Written > verbal. I process better asynchronously.',
+      'I tend to be direct and concise — not because I don\'t care, but because I respect your time.',
+      'I value honest feedback, and I try to keep mine constructive. If something isn\'t working, I\'d rather we talk about it early than let it fester.',
+      'I usually start with the "why" behind something. If I\'m sharing context, it\'s because I think it\'ll help us both.',
+      'I\'m better in writing than in spontaneous conversations. Async is where I do my clearest thinking.',
     ],
   },
   {
     title: 'What Drives Me',
     icon: '⚡',
     content: [
-      'Achievement motivation (41.8%) dominates — "I need to achieve to be worthy."',
-      'Mastery over performance. I care about being genuinely good, not looking good.',
-      'Building systems that outlast the moment. Legacy through structure.',
-      'The intersection of AI governance × personal development × entrepreneurship.',
+      'Seeing an idea become real. There\'s nothing quite like watching something you imagined actually work.',
+      'Genuine mastery — I\'d rather be quietly good at something than loudly recognized for it.',
+      'Helping people see patterns they couldn\'t see before. My favorite moments are when I can help someone else\'s work click.',
+      'Building things that last beyond the moment — systems, tools, frameworks that keep being useful long after I\'ve moved on.',
     ],
   },
   {
     title: 'What Drains Me',
     icon: '▼',
     content: [
-      'Routine logistics and administrative overhead without intellectual content.',
-      'Forced persistence on tasks I\'ve mentally completed.',
-      'Emotional labor without an analytical framework to process through.',
-      'Being asked to execute someone else\'s vision without understanding the architecture.',
+      'Repetitive admin work with no thinking involved — my energy drops fast.',
+      'Having to push forward on something I\'ve mentally moved past. I know this about myself and I\'m working on it.',
+      'Meetings that could\'ve been a doc. (You\'ve heard this one before, but I really mean it.)',
+      'Executing without understanding why. I don\'t need to agree with everything, but I need to understand the reasoning.',
     ],
   },
   {
     title: 'The Five Faces',
     icon: '★',
     content: [
-      'The Professor — Teaching, mentoring, framework delivery. Activated by genuine curiosity in others.',
-      'The Catalyst — Igniting ideas and momentum. Short bursts of intense creative energy.',
-      'The Commander — Directive leadership when stakes are high. 96% critical, 80% direct.',
-      'The Alchemist — Synthesizing disparate ideas into novel frameworks. The signature move.',
-      'The Architect — Building systems, structures, operating models. Where planning lives.',
+      'The Professor — Comes alive when teaching or mentoring someone who\'s genuinely curious. Could talk frameworks all day.',
+      'The Catalyst — Shows up with ten new ideas before coffee. High energy, contagious enthusiasm, short bursts.',
+      'The Commander — Emerges when things get serious and someone needs to make the call. Not my default mode, but it\'s there.',
+      'The Alchemist — Mixes ideas from wildly different places into something new. Probably my signature thing.',
+      'The Architect — Give me a whiteboard and stand back. Wants to build the system, the structure, the operating model.',
     ],
   },
   {
     title: 'Working With Me',
     icon: '◆',
     content: [
-      'Give me the "why" first. I\'ll reject tasks I don\'t understand the purpose of.',
-      'Expect frameworks in response to problems — that\'s how I process.',
-      'Pair me with finishers. I generate 1.7x more plans than I execute.',
-      'Don\'t ask me to slow down for comfort — ask me to slow down for quality.',
-      'Challenge my ideas directly. I respect intellectual rigor over diplomatic consensus.',
+      'I do my best work when I understand the bigger picture — the "why" behind what we\'re doing.',
+      'I\'ll probably respond to your problem with a framework. Feel free to tell me to just answer the question.',
+      'I\'m a strong starter, less strong finisher. Pairing me with someone detail-oriented is a cheat code.',
+      'I genuinely want pushback on my ideas. I\'d rather be wrong early than wrong late.',
+      'I\'ll bring energy, ideas, and structure to any project. In return, I just ask for a bit of patience when I go down rabbit holes.',
     ],
   },
 ];
@@ -148,15 +148,15 @@ interface Condition {
 }
 
 const CONDITIONS: Condition[] = [
-  { name: 'Dual Mind Stance', type: 'buff', icon: '⚡', description: 'Switch between Exploration Mode (divergent) and Execution Mode (convergent) at will.', source: 'Innate — Manifesting Generator' },
-  { name: 'Framework Arsenal', type: 'buff', icon: '📚', description: '10+ philosophical and analytical frameworks loaded simultaneously.', source: '241 Jungian + 220 Existential + 104 Lean convos' },
-  { name: 'Metacognitive Shield', type: 'buff', icon: '🛡', description: 'High self-awareness provides partial immunity to blind spots — when used.', source: 'PrinciplesYou: 97% Self-Questioning' },
-  { name: 'Quantum Processing', type: 'buff', icon: '🔮', description: 'Holds multiple identity states in superposition without premature collapse.', source: 'Cross-platform identity analysis' },
-  { name: 'Elevated Threshold', type: 'debuff', icon: '⏳', description: 'Requires near-perfection before shipping. Plans 1.7x more than executes.', source: 'Planning (552) vs Execution (318) convos' },
-  { name: 'Island Hopper', type: 'debuff', icon: '🏝', description: 'Commitment horizon in months, not years. Breadth always wins over depth.', source: 'Restless saboteur: 6.8/10' },
-  { name: 'System Builder\'s Compulsion', type: 'debuff', icon: '📊', description: '30% chance to convert emotional problems into structural problems.', source: 'Hyper-Rational saboteur: 6.3/10' },
-  { name: 'Accumulation Drive', type: 'debuff', icon: '🔄', description: 'Declared simplification year, but behavior is relentless expansion.', source: 'Simplify (300) vs Accumulate (155) convos' },
-  { name: 'Validation Asymmetry', type: 'debuff', icon: '👁', description: 'Vulnerability outsourced to AI. Competent facade maintained with humans.', source: '92% vulnerability with AI, ~8% with humans' },
+  { name: 'Dual Mind Stance', type: 'buff', icon: '⚡', description: 'Can switch between big-picture brainstorming and heads-down building. Two modes, one brain.', source: 'Innate trait' },
+  { name: 'Framework Arsenal', type: 'buff', icon: '📚', description: 'Has a mental toolkit of 10+ frameworks ready for any situation. Possibly overkill for choosing lunch.', source: 'Years of collecting mental models' },
+  { name: 'Metacognitive Shield', type: 'buff', icon: '🛡', description: 'Unusually aware of his own thinking patterns and biases. Doesn\'t always act on that awareness, but it\'s there.', source: 'Lots of self-reflection' },
+  { name: 'Quantum Processing', type: 'buff', icon: '🔮', description: 'Comfortable holding multiple conflicting ideas at once without needing to pick a winner right away.', source: 'Multicultural upbringing' },
+  { name: 'Elevated Threshold', type: 'debuff', icon: '⏳', description: 'Tends to over-polish before shipping. The "just one more tweak" trap is very real.', source: 'The planning-to-doing ratio' },
+  { name: 'Island Hopper', type: 'debuff', icon: '🏝', description: 'Gets excited about new things a bit too easily. Depth is the aspiration, breadth is the reality.', source: 'A restless spirit' },
+  { name: 'System Builder\'s Compulsion', type: 'debuff', icon: '📊', description: 'Will occasionally build an entire tracking system to avoid having a feeling about something.', source: 'A very analytical brain' },
+  { name: 'Accumulation Drive', type: 'debuff', icon: '🔄', description: 'Says "this is my simplification year" while signing up for three new tools. Every year.', source: 'Curiosity vs. minimalism' },
+  { name: 'Vulnerability Gap', type: 'debuff', icon: '👁', description: 'More open and honest in writing than in person. Working on closing that gap.', source: 'A work in progress' },
 ];
 
 // ─── CAPABILITY MAP ─────────────────────────────────────────────
@@ -181,10 +181,10 @@ const CAPABILITIES: CapabilityDomain[] = [
     icon: '⚡',
     color: '#22d3ee',
     capabilities: [
-      { name: 'Prompt Engineering', level: 'Expert', evidence: '3,954 convos, 9.8M words — 0.3% AI-echo rate' },
-      { name: 'AI Governance', level: 'Expert', evidence: 'Primary professional differentiator' },
-      { name: 'Tool Synthesis', level: 'Expert', evidence: 'Naturally differentiated platforms by cognitive mode' },
-      { name: 'Code & Infrastructure', level: 'Advanced', evidence: '489 code convos — builds when vision crystallizes' },
+      { name: 'Prompt Engineering', level: 'Expert', evidence: 'Builds with AI daily — prompts, agents, workflows, the whole stack' },
+      { name: 'AI Governance', level: 'Expert', evidence: 'Knows where the guardrails should go and why they matter' },
+      { name: 'Tool Synthesis', level: 'Expert', evidence: 'Picks the right AI tool for the job without overthinking it' },
+      { name: 'Code & Infrastructure', level: 'Advanced', evidence: 'Builds real things when the vision is clear enough to start' },
     ],
   },
   {
@@ -192,10 +192,10 @@ const CAPABILITIES: CapabilityDomain[] = [
     icon: '◆',
     color: '#8b5cf6',
     capabilities: [
-      { name: 'Framework Design', level: 'Expert', evidence: 'Virtual C-suites, Life OS, PARA, Second Brain' },
-      { name: 'Pattern Recognition', level: 'Expert', evidence: 'Cross-domain synthesis, behavioral analysis' },
-      { name: 'Strategic Planning', level: 'Expert', evidence: '552 planning conversations — dominant mode' },
-      { name: 'Blueprint Crafting', level: 'Advanced', evidence: 'PRDs, proposals, roadmaps, operating models' },
+      { name: 'Framework Design', level: 'Expert', evidence: 'Life OS, Second Brain, personal operating systems — loves this stuff' },
+      { name: 'Pattern Recognition', level: 'Expert', evidence: 'Spots connections across domains that others miss' },
+      { name: 'Strategic Planning', level: 'Expert', evidence: 'Give him a goal and he\'ll map every path to get there' },
+      { name: 'Blueprint Crafting', level: 'Advanced', evidence: 'PRDs, roadmaps, proposals — turns ideas into structured plans' },
     ],
   },
   {
@@ -203,10 +203,10 @@ const CAPABILITIES: CapabilityDomain[] = [
     icon: '☽',
     color: '#ec4899',
     capabilities: [
-      { name: 'Jungian Analysis', level: 'Advanced', evidence: '241 convos — archetypes, shadow, individuation' },
-      { name: 'Self-Optimization', level: 'Advanced', evidence: '375 convos — relentless drive to level up' },
-      { name: 'Existential Navigation', level: 'Advanced', evidence: '220 convos — meaning, purpose, authenticity' },
-      { name: 'Mindfulness', level: 'Proficient', evidence: 'Genuine but in tension with optimization drive' },
+      { name: 'Jungian Analysis', level: 'Advanced', evidence: 'Archetypes, shadow work, individuation — genuinely fascinated' },
+      { name: 'Self-Optimization', level: 'Advanced', evidence: 'Always looking for ways to grow and get better' },
+      { name: 'Existential Navigation', level: 'Advanced', evidence: 'Thinks deeply about meaning, purpose, and what matters' },
+      { name: 'Mindfulness', level: 'Proficient', evidence: 'Genuine interest, but the optimizer brain makes this tricky' },
     ],
   },
   {
@@ -214,9 +214,9 @@ const CAPABILITIES: CapabilityDomain[] = [
     icon: '◈',
     color: '#22c55e',
     capabilities: [
-      { name: 'Geographic Adaptability', level: 'Advanced', evidence: 'Dubai, Singapore, Indonesia, Canada, Australia, SV' },
-      { name: 'Cross-Cultural Fluency', level: 'Proficient', evidence: 'Each location is an identity proposition' },
-      { name: 'Identity Synthesis', level: 'Developing', evidence: 'Multiple identities in superposition — unresolved' },
+      { name: 'Geographic Adaptability', level: 'Advanced', evidence: 'Has called six countries home — adapts quickly' },
+      { name: 'Cross-Cultural Fluency', level: 'Proficient', evidence: 'Reads rooms across cultures, still learning every day' },
+      { name: 'Identity Synthesis', level: 'Developing', evidence: 'Figuring out how all these different parts of himself fit together' },
     ],
   },
   {
@@ -224,10 +224,10 @@ const CAPABILITIES: CapabilityDomain[] = [
     icon: '▶',
     color: '#f59e0b',
     capabilities: [
-      { name: 'Vision Articulation', level: 'Expert', evidence: 'Can communicate complex ideas with precision' },
-      { name: 'Project Initiation', level: 'Advanced', evidence: 'Strong starts, multiple simultaneous projects' },
-      { name: 'Sustained Delivery', level: 'Developing', evidence: '13% persistent — the acknowledged gap' },
-      { name: 'Physical Discipline', level: 'Developing', evidence: '80 body convos, zero resolution' },
+      { name: 'Vision Articulation', level: 'Expert', evidence: 'Can explain complex ideas in a way that actually lands' },
+      { name: 'Project Initiation', level: 'Advanced', evidence: 'Strong starts, lots of momentum — the exciting part' },
+      { name: 'Sustained Delivery', level: 'Developing', evidence: 'The follow-through muscle. Building it.' },
+      { name: 'Physical Discipline', level: 'Developing', evidence: 'See: STR stat. Aspirational.' },
     ],
   },
 ];
@@ -252,7 +252,7 @@ const DYNAMICS: Dynamic[] = [
     position: 48,
     conversationsA: 341,
     conversationsB: 375,
-    description: 'Almost perfectly balanced = maximum tension. Simultaneously pursuing radical acceptance and radical optimization.',
+    description: 'Wants to fully accept himself AND become the best version of himself. These two things don\'t always agree.',
     severity: 'critical',
   },
   {
@@ -262,7 +262,7 @@ const DYNAMICS: Dynamic[] = [
     position: 63,
     conversationsA: 552,
     conversationsB: 318,
-    description: 'Plans 1.7x more than ships. System-building as a sophisticated form of productive procrastination.',
+    description: 'Loves the planning phase a little too much. The ideas are always flowing — shipping them is the real boss fight.',
     severity: 'high',
   },
   {
@@ -272,7 +272,7 @@ const DYNAMICS: Dynamic[] = [
     position: 65,
     conversationsA: 339,
     conversationsB: 180,
-    description: 'Aspires to depth but practices breadth. The island-hopping pattern.',
+    description: 'Wants to go deep on one thing but keeps discovering interesting new things. The classic generalist\'s dilemma.',
     severity: 'high',
   },
   {
@@ -282,7 +282,7 @@ const DYNAMICS: Dynamic[] = [
     position: 34,
     conversationsA: 300,
     conversationsB: 155,
-    description: 'Talks about simplifying 2x more, but behavior is expansion. Textbook cognitive dissonance.',
+    description: 'Keeps saying "simplify" while the bookmarks folder and tool stack quietly grows. Self-aware about it, at least.',
     severity: 'high',
   },
   {
@@ -292,17 +292,17 @@ const DYNAMICS: Dynamic[] = [
     position: 31,
     conversationsA: 163,
     conversationsB: 73,
-    description: 'Builder leads 2:1, but institutional path persists as financial insurance.',
+    description: 'Heart says build something of his own. Head says the safety net is nice. Still figuring this one out.',
     severity: 'moderate',
   },
 ];
 
 // ─── SABOTEUR CYCLE ─────────────────────────────────────────────
 const SABOTEUR_CYCLE = [
-  { name: 'Restless', score: 6.8, effect: 'Initiates new project before finishing current one' },
-  { name: 'Hyper-Rational', score: 6.3, effect: 'Converts feelings into frameworks' },
-  { name: 'Hyper-Achiever', score: 5.9, effect: 'Worth = output. Rest feels like regression.' },
-  { name: 'Controller', score: 5.3, effect: 'If I can\'t control the system, I\'ll build a new one' },
+  { name: 'Restless', score: 6.8, effect: 'Ooh, shiny new project! (halfway through the current one)' },
+  { name: 'Hyper-Rational', score: 6.3, effect: 'Feelings? Let me build a spreadsheet about those.' },
+  { name: 'Hyper-Achiever', score: 5.9, effect: 'Rest day? Sounds like a day to feel guilty about not working.' },
+  { name: 'Controller', score: 5.3, effect: 'If the system isn\'t working, I\'ll just... build a new system.' },
 ];
 
 // ─── GROWTH PATH ────────────────────────────────────────────────
@@ -319,7 +319,7 @@ const EVOLUTION: EvolutionStage[] = [
   {
     name: 'Code Apprentice',
     period: '2023 Q1-Q2',
-    description: 'Early AI adoption. Building GPTs, playing virtual C-suite. The spark ignites.',
+    description: 'Discovered AI and immediately went all in. Built GPTs, played virtual C-suite. The spark.',
     traits: ['Builder', 'Executive'],
     active: false,
     future: false,
@@ -327,7 +327,7 @@ const EVOLUTION: EvolutionStage[] = [
   {
     name: 'System Builder',
     period: '2023 Q3 — 2024 Q2',
-    description: 'Governance becomes the differentiator. Content creation emerges. Frameworks multiply.',
+    description: 'Found a niche in AI governance. Started creating content, building frameworks. Things got real.',
     traits: ['AI Governance', 'Content Creator', 'Framework Designer'],
     active: false,
     future: false,
@@ -335,7 +335,7 @@ const EVOLUTION: EvolutionStage[] = [
   {
     name: 'The Shaper',
     period: '2024 Q3 — Present',
-    description: 'Multi-identity synthesis. All modes running simultaneously. The wave function has not yet collapsed.',
+    description: 'Doing a bit of everything — building, strategizing, creating, exploring. Hasn\'t picked just one thing yet (and kind of likes it that way).',
     traits: ['Builder', 'Founder', 'Strategist', 'Creator'],
     active: true,
     future: false,
@@ -343,7 +343,7 @@ const EVOLUTION: EvolutionStage[] = [
   {
     name: '??? Sovereign Synthesizer',
     period: 'Future',
-    description: 'Identity collapsed. One thing, done with full force. The quantum state resolves.',
+    description: 'Picks one lane and goes all in. The scattered energy becomes focused force. Someday.',
     traits: ['???'],
     active: false,
     future: true,
@@ -598,7 +598,7 @@ export default function ProfilePage() {
           </div>
           <div className="mt-3 text-[10px] text-[#8892a8] flex items-center gap-1">
             <span className="inline-block w-2 h-2 bg-[#8b5cf6] opacity-50" />
-            Scale: 0-40 | Top-heavy profile — cognitive strengths, execution gaps
+            Scale: 0-40 | Thinks a lot, ships less. Aware of it. Working on it.
           </div>
         </div>
 
@@ -703,7 +703,7 @@ export default function ProfilePage() {
         {/* ═══ 6. CHARACTER DYNAMICS (Sealed) ═══ */}
         <Section title="◈ Character Dynamics" sectionKey="dynamics" openSections={openSections} toggle={toggle} sealed>
           <div className="mb-3 text-[10px] text-[#8b5cf6] border border-[#8b5cf6]/20 bg-[#8b5cf6]/5 p-2">
-            ◈ SEALED — The five internal tensions that define this character&apos;s inner architecture.
+            ◈ The ongoing internal debates. Everyone has them — these are mine.
           </div>
           <div className="space-y-5">
             {DYNAMICS.map(d => (
@@ -772,7 +772,7 @@ export default function ProfilePage() {
               ))}
             </div>
             <div className="mt-2 text-[9px] text-[#8892a8] italic">
-              Cycle: Restless starts → Hyper-Rational justifies → Hyper-Achiever pushes → Controller rebuilds → repeat
+              The loop: start something new → rationalize it → push too hard → rebuild the system → repeat
             </div>
           </div>
         </Section>
@@ -780,7 +780,7 @@ export default function ProfilePage() {
         {/* ═══ 7. GROWTH PATH (Sealed) ═══ */}
         <Section title="◈ Growth Path" sectionKey="growth" openSections={openSections} toggle={toggle} sealed>
           <div className="mb-3 text-[10px] text-[#8b5cf6] border border-[#8b5cf6]/20 bg-[#8b5cf6]/5 p-2">
-            ◈ SEALED — Evolution timeline, philosophical loadout, and requirements to advance.
+            ◈ Where I\'ve been, what I read, and what needs to happen next.
           </div>
 
           {/* Evolution Timeline */}
