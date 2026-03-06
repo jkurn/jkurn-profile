@@ -10,6 +10,7 @@ const CHARACTER = {
   title: 'The Shaper',
   subclass: 'Manifesting Generator',
   level: 32,
+  xp: { current: 9800000, next: 12000000 },
   bio: 'Dual-mind operator — explores with divergent thought, executes with convergent precision. Builds frameworks across domains, then builds more frameworks about those frameworks.',
 };
 
@@ -529,13 +530,27 @@ export default function ProfilePage() {
                 </div>
               </div>
 
-              <div className="flex items-center justify-center sm:justify-start gap-2">
+              <div className="flex items-center justify-center sm:justify-start gap-3">
                 <span
-                  className="text-[9px]"
+                  className="text-[9px] shrink-0"
                   style={{ fontFamily: 'var(--font-press-start)', color: 'var(--text-gold)' }}
                 >
                   Lv.{CHARACTER.level}
                 </span>
+                <div className="flex items-center gap-2 flex-1 max-w-[200px]">
+                  <div className="stat-bar-track flex-1 border border-[#2a3050] h-[10px]">
+                    <div
+                      className="stat-bar-fill"
+                      style={{
+                        width: statsAnimated ? `${(CHARACTER.xp.current / CHARACTER.xp.next) * 100}%` : '0%',
+                        background: 'linear-gradient(90deg, #c8a84ecc, #c8a84e)',
+                      }}
+                    />
+                  </div>
+                  <span className="text-[8px] text-[#8892a8] shrink-0 tabular-nums">
+                    {(CHARACTER.xp.current / 1000000).toFixed(1)}M/{(CHARACTER.xp.next / 1000000).toFixed(0)}M
+                  </span>
+                </div>
               </div>
 
               <p className="text-[10px] text-[#8892a8] leading-relaxed max-w-md">
