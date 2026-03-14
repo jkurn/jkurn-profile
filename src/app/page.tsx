@@ -3,10 +3,18 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
+import { ScrambleTextPlugin } from 'gsap/ScrambleTextPlugin';
+import { SplitText } from 'gsap/SplitText';
+import { CustomEase } from 'gsap/CustomEase';
 import PixelAvatar from '@/components/PixelAvatar';
 import RadarChart from '@/components/RadarChart';
 
-gsap.registerPlugin(useGSAP);
+gsap.registerPlugin(useGSAP, ScrambleTextPlugin, SplitText, CustomEase);
+
+// Signature ease: fast burst → overshoot → snappy settle
+if (typeof window !== 'undefined') {
+  CustomEase.create('cyberSnap', 'M0,0 C0.14,0 0.24,0.8 0.34,1.06 0.43,1.12 0.56,0.98 0.66,1.0 0.76,1.01 0.88,1.0 1,1');
+}
 
 // ─── CHARACTER DATA ──────────────────────────────────────────────
 const CHARACTER = {
@@ -401,6 +409,9 @@ export default function ProfilePage() {
   const tabContentRef = useRef<HTMLDivElement>(null);
   const statBarsRef = useRef<HTMLDivElement>(null);
   const xpBarRef = useRef<HTMLDivElement>(null);
+  const heroNameRef = useRef<HTMLHeadingElement>(null);
+  const heroBioRef = useRef<HTMLParagraphElement>(null);
+  const heroCardRef = useRef<HTMLElement>(null);
 
   // Boot sequence — GSAP timeline
   // If document is hidden (e.g. iframe/preview tool), skip animation immediately
@@ -448,7 +459,7 @@ export default function ProfilePage() {
       y: 20,
       duration: 0.5,
       stagger: 0.1,
-      ease: 'power2.out',
+      ease: 'cyberSnap',
     });
   }, { dependencies: [booted], scope: mainRef });
 
@@ -504,6 +515,188 @@ export default function ProfilePage() {
     return () => clearTimeout(timer);
   }, [activeTab]);
 
+  // ─── Step 1: ScrambleText hero name decode ───
+  useGSAP(() => {
+    if (!booted || !heroNameRef.current || document.hidden) return;
+    gsap.to(heroNameRef.current, {
+      duration: 1.8,
+      delay: 0.6,
+      scrambleText: {
+        text: CHARACTER.name,
+        chars: '!@#$%^&*01XMWK',
+        revealDelay: 0.2,
+        speed: 0.4,
+      },
+    });
+  }, { dependencies: [booted] });
+
+  // ─── Step 2: SplitText bio character cascade ───
+  useGSAP(() => {
+    if (!booted || !heroBioRef.current || document.hidden) return;
+    const split = new SplitText(heroBioRef.current, { type: 'chars' });
+    gsap.from(split.chars, {
+      opacity: 0,
+      y: 12,
+      rotationX: -40,
+      duration: 0.6,
+      delay: 2.2,
+      stagger: 0.02,
+      ease: 'back.out(1.7)',
+      immediateRender: false,
+    });
+    return () => { split.revert(); };
+  }, { dependencies: [booted] });
+
+  // ─── Step 3: SVG glitch filter (intermittent) ───
+  useGSAP(() => {
+    if (!booted || !heroCardRef.current || document.hidden) return;
+    const turbulence = document.querySelector('#glitch feTurbulence');
+    const displacement = document.querySelector('#glitch feDisplacementMap');
+    if (!turbulence || !displacement) return;
+
+    const fireGlitch = () => {
+      const tl = gsap.timeline({
+        onComplete: () => {
+          const nextDelay = gsap.utils.random(4, 8);
+          gsap.delayedCall(nextDelay, fireGlitch);
+        },
+      });
+      tl.to(turbulence, { attr: { baseFrequency: '0.08' }, duration: 0.05 })
+        .to(displacement, { attr: { scale: '15' }, duration: 0.05 }, '<')
+        .to(heroNameRef.current, { textShadow: '2px 0 #ff0000, -2px 0 #00ff00', duration: 0.05 }, '<')
+        .to({}, { duration: 0.1 })
+        .to(turbulence, { attr: { baseFrequency: '0' }, duration: 0.05 })
+        .to(displacement, { attr: { scale: '0' }, duration: 0.05 }, '<')
+        .to(heroNameRef.current, { textShadow: 'none', duration: 0.05 }, '<');
+    };
+
+    gsap.delayedCall(3, fireGlitch);
+  }, { dependencies: [booted] });
+
+  // ─── Step 5: Neon glow pulse (ambient) ───
+  useGSAP(() => {
+    if (!booted || document.hidden) return;
+    gsap.to('.rpg-panel-gold', {
+      boxShadow: '0 0 12px rgba(200,168,78,0.3), inset 0 0 12px rgba(200,168,78,0.05)',
+      duration: 2,
+      ease: 'sine.inOut',
+      yoyo: true,
+      repeat: -1,
+    });
+    gsap.to('.section-header', {
+      textShadow: '0 0 7px #dcc06e, 0 0 21px #c8a84e',
+      duration: 2,
+      ease: 'sine.inOut',
+      yoyo: true,
+      repeat: -1,
+    });
+  }, { dependencies: [booted] });
+
+  // ─── Step 6: Neon flicker on section headers (intermittent) ───
+  useEffect(() => {
+    if (!booted || document.hidden) return;
+    const headers = document.querySelectorAll<HTMLElement>('.section-header');
+    const tweens: gsap.core.Tween[] = [];
+
+    headers.forEach((header) => {
+      const flickerLoop = () => {
+        const tl = gsap.timeline({
+          onComplete: () => {
+            const nextDelay = gsap.utils.random(4, 10);
+            const dc = gsap.delayedCall(nextDelay, flickerLoop);
+            tweens.push(dc as unknown as gsap.core.Tween);
+          },
+        });
+        tl.to(header, { opacity: 0.7, duration: 0.03 })
+          .to(header, { opacity: 1, duration: 0.03 })
+          .to(header, { opacity: 0.8, duration: 0.04 })
+          .to(header, { opacity: 1, duration: 0.03 });
+        tweens.push(tl as unknown as gsap.core.Tween);
+      };
+      const initialDelay = gsap.utils.random(2, 6);
+      const dc = gsap.delayedCall(initialDelay, flickerLoop);
+      tweens.push(dc as unknown as gsap.core.Tween);
+    });
+
+    return () => { tweens.forEach(t => t.kill()); };
+  }, [booted, activeTab]);
+
+  // ─── Step 8: Magnetic tab buttons ───
+  useEffect(() => {
+    if (!booted || document.hidden) return;
+    const buttons = document.querySelectorAll<HTMLElement>('.tab-button');
+    const cleanups: (() => void)[] = [];
+
+    buttons.forEach((btn) => {
+      const xTo = gsap.quickTo(btn, 'x', { duration: 0.3, ease: 'power3' });
+      const yTo = gsap.quickTo(btn, 'y', { duration: 0.3, ease: 'power3' });
+
+      const handleMove = (e: MouseEvent) => {
+        const rect = btn.getBoundingClientRect();
+        const relX = e.clientX - (rect.left + rect.width / 2);
+        const relY = e.clientY - (rect.top + rect.height / 2);
+        xTo(relX * 0.3);
+        yTo(relY * 0.3);
+      };
+
+      const handleLeave = () => {
+        gsap.to(btn, { x: 0, y: 0, duration: 0.6, ease: 'elastic.out(1, 0.4)' });
+      };
+
+      btn.addEventListener('mousemove', handleMove);
+      btn.addEventListener('mouseleave', handleLeave);
+      cleanups.push(() => {
+        btn.removeEventListener('mousemove', handleMove);
+        btn.removeEventListener('mouseleave', handleLeave);
+      });
+    });
+
+    return () => { cleanups.forEach(fn => fn()); };
+  }, [booted]);
+
+  // ─── Step 9: 3D perspective tilt on panels ───
+  useEffect(() => {
+    if (!booted || document.hidden) return;
+    const panels = document.querySelectorAll<HTMLElement>('.rpg-panel');
+    const cleanups: (() => void)[] = [];
+
+    panels.forEach((panel) => {
+      panel.style.transformStyle = 'preserve-3d';
+      panel.style.transformOrigin = 'center center';
+
+      const handleMove = (e: MouseEvent) => {
+        const rect = panel.getBoundingClientRect();
+        const relX = (e.clientX - rect.left) / rect.width - 0.5;
+        const relY = (e.clientY - rect.top) / rect.height - 0.5;
+        gsap.to(panel, {
+          rotateY: relX * 6,
+          rotateX: -relY * 6,
+          transformPerspective: 800,
+          duration: 0.3,
+          ease: 'power2.out',
+        });
+      };
+
+      const handleLeave = () => {
+        gsap.to(panel, {
+          rotateY: 0,
+          rotateX: 0,
+          duration: 0.6,
+          ease: 'elastic.out(1, 0.5)',
+        });
+      };
+
+      panel.addEventListener('mousemove', handleMove);
+      panel.addEventListener('mouseleave', handleLeave);
+      cleanups.push(() => {
+        panel.removeEventListener('mousemove', handleMove);
+        panel.removeEventListener('mouseleave', handleLeave);
+      });
+    });
+
+    return () => { cleanups.forEach(fn => fn()); };
+  }, [booted, activeTab]);
+
   // Animate tab content — directional slide based on which tab we're moving to
   const TAB_ORDER: TabKey[] = ['overview', 'about', 'skills', 'growth'];
 
@@ -524,7 +717,22 @@ export default function ProfilePage() {
           y: 8,
           duration: 0.35,
           stagger: 0.05,
-          ease: 'power2.out',
+          ease: 'cyberSnap',
+        });
+
+        // ScrambleText decode on section headers
+        const headers = tabContentRef.current.querySelectorAll('.section-header');
+        headers.forEach((header) => {
+          const originalText = header.textContent || '';
+          gsap.to(header, {
+            duration: 0.8,
+            scrambleText: {
+              text: originalText,
+              chars: '!@#$%^&*01XMWK',
+              revealDelay: 0.1,
+              speed: 0.5,
+            },
+          });
         });
       });
     });
@@ -560,10 +768,18 @@ export default function ProfilePage() {
     <main ref={mainRef} className="min-h-screen pb-20">
       <div className="scanline-overlay" />
 
+      {/* Hidden SVG filter for glitch effect */}
+      <svg width="0" height="0" style={{ position: 'absolute' }}>
+        <filter id="glitch">
+          <feTurbulence type="fractalNoise" baseFrequency="0" numOctaves="3" result="noise" />
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="0" xChannelSelector="R" yChannelSelector="G" />
+        </filter>
+      </svg>
+
       <div className="max-w-3xl mx-auto px-4 pt-8 space-y-4">
 
         {/* ═══ HERO ═══ */}
-        <header className="rpg-panel rpg-panel-gold p-6 gsap-panel">
+        <header ref={heroCardRef} className="rpg-panel rpg-panel-gold p-6 gsap-panel glitch-target">
           <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
             <div className="shrink-0">
               <PixelAvatar />
@@ -572,6 +788,7 @@ export default function ProfilePage() {
             <div className="flex-1 text-center sm:text-left space-y-3">
               <div>
                 <h1
+                  ref={heroNameRef}
                   className="text-[13px] sm:text-base tracking-widest"
                   style={{ fontFamily: 'var(--font-press-start)', color: 'var(--text-gold)' }}
                 >
@@ -608,7 +825,7 @@ export default function ProfilePage() {
                 </div>
               </div>
 
-              <p className="text-[13px] text-[#8892a8] leading-relaxed max-w-md">
+              <p ref={heroBioRef} className="text-[13px] text-[#8892a8] leading-relaxed max-w-md">
                 {CHARACTER.bio}
               </p>
             </div>
@@ -989,7 +1206,7 @@ export default function ProfilePage() {
             className="text-[10px] text-[#8892a8] tracking-widest"
             style={{ fontFamily: 'var(--font-press-start)' }}
           >
-            JKURN v0.4 — CHARACTER PROFILE SYSTEM
+            JKURN v0.5 — CHARACTER PROFILE SYSTEM
           </p>
         </div>
       </div>

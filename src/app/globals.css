@@ -211,6 +211,12 @@ body {
   z-index: 100;
 }
 
+/* Glitch target — filter starts at zero intensity, GSAP spikes it intermittently */
+.glitch-target {
+  will-change: filter;
+  filter: url(#glitch);
+}
+
 /* Scanline overlay */
 .scanline-overlay {
   position: fixed;
