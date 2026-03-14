@@ -102,6 +102,7 @@ body {
 .stat-bar-fill {
   height: 100%;
   position: relative;
+  transition: width 1.2s ease-out;
 }
 
 .stat-bar-fill::after {

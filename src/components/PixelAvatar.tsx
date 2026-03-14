@@ -54,7 +54,7 @@ export default function PixelAvatar() {
   const maxCols = Math.max(...CHARACTER.map(row => row.length));
 
   useGSAP(() => {
-    if (!containerRef.current || !glowRef.current) return;
+    if (!containerRef.current || !glowRef.current || document.hidden) return;
 
     // Float animation
     gsap.to(containerRef.current, {

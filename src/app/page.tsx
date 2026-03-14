@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import PixelAvatar from '@/components/PixelAvatar';
@@ -395,14 +395,28 @@ export default function ProfilePage() {
   const [booted, setBooted] = useState(false);
   const [statsAnimated, setStatsAnimated] = useState(false);
   const [activeTab, setActiveTab] = useState<TabKey>('overview');
+  const activeTabRef = useRef<TabKey>('overview');
   const bootRef = useRef<HTMLDivElement>(null);
   const mainRef = useRef<HTMLDivElement>(null);
   const tabContentRef = useRef<HTMLDivElement>(null);
   const statBarsRef = useRef<HTMLDivElement>(null);
+  const xpBarRef = useRef<HTMLDivElement>(null);
 
   // Boot sequence — GSAP timeline
+  // If document is hidden (e.g. iframe/preview tool), skip animation immediately
   useGSAP(() => {
     if (!bootRef.current) return;
+
+    const complete = () => {
+      setBooted(true);
+      setTimeout(() => setStatsAnimated(true), 200);
+    };
+
+    // Skip animation when tab/iframe is hidden — GSAP ticker pauses in hidden docs
+    if (document.hidden) {
+      complete();
+      return;
+    }
 
     const lines = bootRef.current.querySelectorAll('.boot-line');
     const tl = gsap.timeline({
@@ -410,10 +424,7 @@ export default function ProfilePage() {
         gsap.to(bootRef.current, {
           opacity: 0,
           duration: 0.4,
-          onComplete: () => {
-            setBooted(true);
-            setTimeout(() => setStatsAnimated(true), 200);
-          },
+          onComplete: complete,
         });
       },
     });
@@ -427,9 +438,9 @@ export default function ProfilePage() {
     });
   }, { scope: bootRef });
 
-  // Animate main content on boot complete
+  // Animate main content on boot complete — skip when GSAP ticker is sleeping (hidden iframe)
   useGSAP(() => {
-    if (!booted || !mainRef.current) return;
+    if (!booted || !mainRef.current || document.hidden) return;
 
     const panels = mainRef.current.querySelectorAll('.gsap-panel');
     gsap.from(panels, {
@@ -441,43 +452,84 @@ export default function ProfilePage() {
     });
   }, { dependencies: [booted], scope: mainRef });
 
-  // Animate stat bars with GSAP
-  useGSAP(() => {
+  // Animate stat bars — CSS transition drives widths (works even when GSAP ticker sleeps),
+  // GSAP adds counter number count-up as an enhancement
+  useEffect(() => {
     if (!statsAnimated || !statBarsRef.current) return;
 
-    const bars = statBarsRef.current.querySelectorAll('.gsap-stat-fill');
-    bars.forEach((bar) => {
-      const target = (bar as HTMLElement).dataset.width || '0%';
-      gsap.to(bar, {
-        width: target,
+    // CSS transition: set width via style, transition handles the animation
+    const bars = statBarsRef.current.querySelectorAll<HTMLElement>('.gsap-stat-fill');
+    bars.forEach((bar, i) => {
+      setTimeout(() => { bar.style.width = bar.dataset.width || '0%'; }, 60 + i * 60);
+    });
+
+    // GSAP counter count-up (enhancement — gracefully falls back to final value if ticker sleeping)
+    const counters = statBarsRef.current.querySelectorAll<HTMLElement>('.gsap-counter');
+    counters.forEach((el, i) => {
+      const target = parseInt(el.dataset.target || '0', 10);
+      const obj = { val: 0 };
+      const tween = gsap.to(obj, {
+        val: target,
         duration: 1.2,
+        delay: 0.1 + i * 0.06,
         ease: 'power2.out',
-        delay: 0.1,
+        onUpdate: () => { el.textContent = Math.round(obj.val).toString(); },
       });
+      // If GSAP ticker is sleeping (hidden iframe), jump to final value after 300ms
+      setTimeout(() => {
+        if (el.textContent === '0') {
+          tween.kill();
+          el.textContent = target.toString();
+        }
+      }, 300 + i * 60);
     });
-  }, { dependencies: [statsAnimated], scope: statBarsRef });
+  }, [statsAnimated]);
 
-  // Animate tab content on tab change
-  const animateTabContent = useCallback(() => {
-    if (!tabContentRef.current) return;
-    const children = tabContentRef.current.querySelectorAll('.gsap-tab-item');
-    if (children.length === 0) return;
+  // Animate XP bar via CSS transition
+  useEffect(() => {
+    if (!statsAnimated || !xpBarRef.current) return;
+    const target = `${(CHARACTER.xp.current / CHARACTER.xp.next) * 100}%`;
+    setTimeout(() => { if (xpBarRef.current) xpBarRef.current.style.width = target; }, 80);
+  }, [statsAnimated]);
 
-    gsap.from(children, {
-      opacity: 0,
-      y: 14,
-      duration: 0.35,
-      stagger: 0.05,
-      ease: 'power2.out',
-    });
-  }, []);
+  // Animate saboteur bars via CSS transition when Inner Work tab is active
+  useEffect(() => {
+    if (activeTab !== 'growth') return;
+    const timer = setTimeout(() => {
+      const bars = document.querySelectorAll<HTMLElement>('.gsap-saboteur-fill');
+      bars.forEach((bar, i) => {
+        setTimeout(() => { bar.style.width = bar.dataset.width || '0%'; }, i * 80);
+      });
+    }, 350);
+    return () => clearTimeout(timer);
+  }, [activeTab]);
+
+  // Animate tab content — directional slide based on which tab we're moving to
+  const TAB_ORDER: TabKey[] = ['overview', 'about', 'skills', 'growth'];
 
   const handleTabChange = useCallback((tab: TabKey) => {
+    const prevIdx = TAB_ORDER.indexOf(activeTabRef.current);
+    const nextIdx = TAB_ORDER.indexOf(tab);
+    const direction = nextIdx >= prevIdx ? 1 : -1;
+    activeTabRef.current = tab;
     setActiveTab(tab);
     requestAnimationFrame(() => {
-      requestAnimationFrame(() => animateTabContent());
+      requestAnimationFrame(() => {
+        if (!tabContentRef.current) return;
+        const children = tabContentRef.current.querySelectorAll('.gsap-tab-item');
+        if (children.length === 0 || document.hidden) return;
+        gsap.from(children, {
+          opacity: 0,
+          x: direction * 24,
+          y: 8,
+          duration: 0.35,
+          stagger: 0.05,
+          ease: 'power2.out',
+        });
+      });
     });
-  }, [animateTabContent]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Boot screen
   if (!booted) {
@@ -545,11 +597,9 @@ export default function ProfilePage() {
                 <div className="flex items-center gap-2 flex-1 max-w-[200px]">
                   <div className="stat-bar-track flex-1 border border-[#2a3050] h-[10px]">
                     <div
+                      ref={xpBarRef}
                       className="stat-bar-fill"
-                      style={{
-                        width: statsAnimated ? `${(CHARACTER.xp.current / CHARACTER.xp.next) * 100}%` : '0%',
-                        background: 'linear-gradient(90deg, #c8a84ecc, #c8a84e)',
-                      }}
+                      style={{ width: '0%', background: 'linear-gradient(90deg, #c8a84ecc, #c8a84e)', transition: 'width 1.5s ease-out' }}
                     />
                   </div>
                   <span className="text-[11px] text-[#8892a8] shrink-0 tabular-nums">
@@ -604,7 +654,9 @@ export default function ProfilePage() {
                       <div className="flex-1">
                         <div className="flex items-center justify-between mb-1">
                           <span className="text-[13px] text-[#e8dcc8] font-bold">{attr.label}</span>
-                          <span className="text-[12px] text-[#8892a8] tabular-nums">{attr.value}/{attr.max}</span>
+                          <span className="text-[12px] text-[#8892a8] tabular-nums">
+                            <span className="gsap-counter" data-target={attr.value}>0</span>/{attr.max}
+                          </span>
                         </div>
                         <div className="stat-bar-track border border-[#2a3050] mb-1">
                           <div
@@ -795,11 +847,9 @@ export default function ProfilePage() {
                         <div className="flex-1">
                           <div className="stat-bar-track border border-[#2a3050] h-2">
                             <div
-                              className="h-full"
-                              style={{
-                                width: `${(s.score / 10) * 100}%`,
-                                background: 'linear-gradient(90deg, #ef4444cc, #ef4444)',
-                              }}
+                              className="gsap-saboteur-fill h-full"
+                              data-width={`${(s.score / 10) * 100}%`}
+                              style={{ width: '0%', background: 'linear-gradient(90deg, #ef4444cc, #ef4444)', transition: 'width 1.0s ease-out' }}
                             />
                           </div>
                         </div>

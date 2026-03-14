@@ -53,6 +53,13 @@ export default function RadarChart({ attributes, size = 280, animate = true }: R
   useGSAP(() => {
     if (!animate) return;
 
+    // If GSAP ticker is sleeping (hidden iframe), jump to final state immediately
+    if (document.hidden) {
+      progressRef.current.value = 1;
+      setProgress(1);
+      return;
+    }
+
     gsap.to(progressRef.current, {
       value: 1,
       duration: 1.4,
