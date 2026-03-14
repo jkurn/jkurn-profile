@@ -654,48 +654,36 @@ export default function ProfilePage() {
     return () => { cleanups.forEach(fn => fn()); };
   }, [booted]);
 
-  // ─── Step 9: 3D perspective tilt on panels ───
+  // ─── Hover scramble on stat counters ───
   useEffect(() => {
-    if (!booted || document.hidden) return;
-    const panels = document.querySelectorAll<HTMLElement>('.rpg-panel');
+    if (!booted || !statBarsRef.current || document.hidden) return;
+
+    const rows = statBarsRef.current.querySelectorAll<HTMLElement>('.stat-row');
     const cleanups: (() => void)[] = [];
 
-    panels.forEach((panel) => {
-      panel.style.transformStyle = 'preserve-3d';
-      panel.style.transformOrigin = 'center center';
+    rows.forEach((row) => {
+      const counter = row.querySelector<HTMLElement>('.gsap-counter');
+      if (!counter) return;
 
-      const handleMove = (e: MouseEvent) => {
-        const rect = panel.getBoundingClientRect();
-        const relX = (e.clientX - rect.left) / rect.width - 0.5;
-        const relY = (e.clientY - rect.top) / rect.height - 0.5;
-        gsap.to(panel, {
-          rotateY: relX * 6,
-          rotateX: -relY * 6,
-          transformPerspective: 800,
-          duration: 0.3,
-          ease: 'power2.out',
+      const handleEnter = () => {
+        const target = counter.dataset.target || '0';
+        gsap.to(counter, {
+          duration: 0.4,
+          scrambleText: {
+            text: target,
+            chars: '0123456789',
+            revealDelay: 0.1,
+            speed: 0.8,
+          },
         });
       };
 
-      const handleLeave = () => {
-        gsap.to(panel, {
-          rotateY: 0,
-          rotateX: 0,
-          duration: 0.6,
-          ease: 'elastic.out(1, 0.5)',
-        });
-      };
-
-      panel.addEventListener('mousemove', handleMove);
-      panel.addEventListener('mouseleave', handleLeave);
-      cleanups.push(() => {
-        panel.removeEventListener('mousemove', handleMove);
-        panel.removeEventListener('mouseleave', handleLeave);
-      });
+      row.addEventListener('mouseenter', handleEnter);
+      cleanups.push(() => row.removeEventListener('mouseenter', handleEnter));
     });
 
     return () => { cleanups.forEach(fn => fn()); };
-  }, [booted, activeTab]);
+  }, [booted, statsAnimated]);
 
   // Animate tab content — directional slide based on which tab we're moving to
   const TAB_ORDER: TabKey[] = ['overview', 'about', 'skills', 'growth'];
@@ -861,7 +849,7 @@ export default function ProfilePage() {
                 <h2 className="section-header mb-4">◆ Core Attributes</h2>
                 <div className="space-y-3">
                   {ATTRIBUTES.map(attr => (
-                    <div key={attr.abbr} className="flex items-start gap-3">
+                    <div key={attr.abbr} className="stat-row flex items-start gap-3">
                       <span
                         className="w-12 text-[11px] font-bold shrink-0 pt-0.5"
                         style={{ color: attr.color, fontFamily: 'var(--font-press-start)' }}

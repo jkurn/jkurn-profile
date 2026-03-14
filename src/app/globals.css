@@ -74,6 +74,19 @@ body {
   pointer-events: none;
 }
 
+.rpg-panel::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(200,168,78,0.4) 50%, transparent 100%);
+  pointer-events: none;
+  z-index: 1;
+  animation: panelScan 1.2s ease-out 0.3s both;
+}
+
 .rpg-panel-gold {
   border-color: var(--border-gold);
 }
@@ -237,6 +250,12 @@ body {
 @keyframes shimmer {
   0%, 100% { transform: translateX(-200%); }
   50% { transform: translateX(200%); }
+}
+
+@keyframes panelScan {
+  0% { top: 0; opacity: 0; }
+  10% { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
 }
 
 @keyframes cursorBlink {
