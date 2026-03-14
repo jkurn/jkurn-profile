@@ -8,6 +8,7 @@ import { SplitText } from 'gsap/SplitText';
 import { CustomEase } from 'gsap/CustomEase';
 import PixelAvatar from '@/components/PixelAvatar';
 import RadarChart from '@/components/RadarChart';
+import AccordionSection from '@/components/AccordionSection';
 
 gsap.registerPlugin(useGSAP, ScrambleTextPlugin, SplitText, CustomEase);
 
@@ -376,15 +377,6 @@ function ProficiencyBadge({ level }: { level: Proficiency }) {
   );
 }
 
-// ─── TAB TYPES ──────────────────────────────────────────────────
-type TabKey = 'overview' | 'about' | 'skills' | 'growth';
-
-const TAB_LABELS: Record<TabKey, string> = {
-  overview: 'Overview',
-  about: 'About Me',
-  skills: 'Skills',
-  growth: 'Inner Work',
-};
 
 // ─── BOOT SEQUENCE ──────────────────────────────────────────────
 
@@ -402,16 +394,23 @@ const BOOT_LINES = [
 export default function ProfilePage() {
   const [booted, setBooted] = useState(false);
   const [statsAnimated, setStatsAnimated] = useState(false);
-  const [activeTab, setActiveTab] = useState<TabKey>('overview');
-  const activeTabRef = useRef<TabKey>('overview');
+  const [openSections, setOpenSections] = useState<Set<string>>(() => new Set(['attributes']));
   const bootRef = useRef<HTMLDivElement>(null);
   const mainRef = useRef<HTMLDivElement>(null);
-  const tabContentRef = useRef<HTMLDivElement>(null);
   const statBarsRef = useRef<HTMLDivElement>(null);
   const xpBarRef = useRef<HTMLDivElement>(null);
   const heroNameRef = useRef<HTMLHeadingElement>(null);
   const heroBioRef = useRef<HTMLParagraphElement>(null);
   const heroCardRef = useRef<HTMLElement>(null);
+
+  const toggleSection = useCallback((id: string) => {
+    setOpenSections(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }, []);
 
   // Boot sequence — GSAP timeline
   // If document is hidden (e.g. iframe/preview tool), skip animation immediately
@@ -503,9 +502,9 @@ export default function ProfilePage() {
     setTimeout(() => { if (xpBarRef.current) xpBarRef.current.style.width = target; }, 80);
   }, [statsAnimated]);
 
-  // Animate saboteur bars via CSS transition when Inner Work tab is active
+  // Animate saboteur bars via CSS transition when dynamics accordion opens
   useEffect(() => {
-    if (activeTab !== 'growth') return;
+    if (!openSections.has('dynamics')) return;
     const timer = setTimeout(() => {
       const bars = document.querySelectorAll<HTMLElement>('.gsap-saboteur-fill');
       bars.forEach((bar, i) => {
@@ -513,7 +512,7 @@ export default function ProfilePage() {
       });
     }, 350);
     return () => clearTimeout(timer);
-  }, [activeTab]);
+  }, [openSections]);
 
   // ─── Step 1: ScrambleText hero name decode ───
   useGSAP(() => {
@@ -619,39 +618,6 @@ export default function ProfilePage() {
     });
 
     return () => { tweens.forEach(t => t.kill()); };
-  }, [booted, activeTab]);
-
-  // ─── Step 8: Magnetic tab buttons ───
-  useEffect(() => {
-    if (!booted || document.hidden) return;
-    const buttons = document.querySelectorAll<HTMLElement>('.tab-button');
-    const cleanups: (() => void)[] = [];
-
-    buttons.forEach((btn) => {
-      const xTo = gsap.quickTo(btn, 'x', { duration: 0.3, ease: 'power3' });
-      const yTo = gsap.quickTo(btn, 'y', { duration: 0.3, ease: 'power3' });
-
-      const handleMove = (e: MouseEvent) => {
-        const rect = btn.getBoundingClientRect();
-        const relX = e.clientX - (rect.left + rect.width / 2);
-        const relY = e.clientY - (rect.top + rect.height / 2);
-        xTo(relX * 0.3);
-        yTo(relY * 0.3);
-      };
-
-      const handleLeave = () => {
-        gsap.to(btn, { x: 0, y: 0, duration: 0.6, ease: 'elastic.out(1, 0.4)' });
-      };
-
-      btn.addEventListener('mousemove', handleMove);
-      btn.addEventListener('mouseleave', handleLeave);
-      cleanups.push(() => {
-        btn.removeEventListener('mousemove', handleMove);
-        btn.removeEventListener('mouseleave', handleLeave);
-      });
-    });
-
-    return () => { cleanups.forEach(fn => fn()); };
   }, [booted]);
 
   // ─── Hover scramble on stat counters ───
@@ -685,47 +651,6 @@ export default function ProfilePage() {
     return () => { cleanups.forEach(fn => fn()); };
   }, [booted, statsAnimated]);
 
-  // Animate tab content — directional slide based on which tab we're moving to
-  const TAB_ORDER: TabKey[] = ['overview', 'about', 'skills', 'growth'];
-
-  const handleTabChange = useCallback((tab: TabKey) => {
-    const prevIdx = TAB_ORDER.indexOf(activeTabRef.current);
-    const nextIdx = TAB_ORDER.indexOf(tab);
-    const direction = nextIdx >= prevIdx ? 1 : -1;
-    activeTabRef.current = tab;
-    setActiveTab(tab);
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        if (!tabContentRef.current) return;
-        const children = tabContentRef.current.querySelectorAll('.gsap-tab-item');
-        if (children.length === 0 || document.hidden) return;
-        gsap.from(children, {
-          opacity: 0,
-          x: direction * 24,
-          y: 8,
-          duration: 0.35,
-          stagger: 0.05,
-          ease: 'cyberSnap',
-        });
-
-        // ScrambleText decode on section headers
-        const headers = tabContentRef.current.querySelectorAll('.section-header');
-        headers.forEach((header) => {
-          const originalText = header.textContent || '';
-          gsap.to(header, {
-            duration: 0.8,
-            scrambleText: {
-              text: originalText,
-              chars: '!@#$%^&*01XMWK',
-              revealDelay: 0.1,
-              speed: 0.5,
-            },
-          });
-        });
-      });
-    });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   // Boot screen
   if (!booted) {
@@ -820,360 +745,324 @@ export default function ProfilePage() {
           </div>
         </header>
 
-        {/* ═══ TAB NAVIGATION ═══ */}
-        <nav className="tab-nav sticky top-0 z-40 pt-1 gsap-panel">
-          {(Object.keys(TAB_LABELS) as TabKey[]).map(tab => (
-            <button
-              key={tab}
-              onClick={() => handleTabChange(tab)}
-              className={`tab-button ${activeTab === tab ? 'active' : ''}`}
-            >
-              {TAB_LABELS[tab]}
-            </button>
-          ))}
-        </nav>
+        {/* ═══ ACCORDION SECTIONS ═══ */}
+        <div className="space-y-4">
 
-        {/* ═══ TAB CONTENT ═══ */}
-        <div ref={tabContentRef}>
-
-          {/* ── OVERVIEW TAB ── */}
-          {activeTab === 'overview' && (
-            <div className="space-y-4">
-              {/* Radar Chart */}
-              <div className="rpg-panel p-4 gsap-tab-item flex justify-center">
-                <RadarChart attributes={ATTRIBUTES} animate={statsAnimated} />
-              </div>
-
-              {/* Core Attributes */}
-              <div ref={statBarsRef} className="rpg-panel p-4 gsap-tab-item">
-                <h2 className="section-header mb-4">◆ Core Attributes</h2>
-                <div className="space-y-3">
-                  {ATTRIBUTES.map(attr => (
-                    <div key={attr.abbr} className="stat-row flex items-start gap-3">
-                      <span
-                        className="w-12 text-[11px] font-bold shrink-0 pt-0.5"
-                        style={{ color: attr.color, fontFamily: 'var(--font-press-start)' }}
-                      >
-                        {attr.abbr}
-                      </span>
-                      <div className="flex-1">
-                        <div className="flex items-center justify-between mb-1">
-                          <span className="text-[13px] text-[#e8dcc8] font-bold">{attr.label}</span>
-                          <span className="text-[12px] text-[#8892a8] tabular-nums">
-                            <span className="gsap-counter" data-target={attr.value}>0</span>/{attr.max}
-                          </span>
-                        </div>
-                        <div className="stat-bar-track border border-[#2a3050] mb-1">
-                          <div
-                            className="gsap-stat-fill stat-bar-fill"
-                            data-width={`${(attr.value / attr.max) * 100}%`}
-                            style={{
-                              width: '0%',
-                              background: `linear-gradient(90deg, ${attr.color}cc, ${attr.color})`,
-                            }}
-                          />
-                        </div>
-                        <p className="text-[12px] text-[#8892a8] leading-relaxed">{attr.description}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <div className="mt-3 text-[12px] text-[#8892a8] flex items-center gap-1">
-                  <span className="inline-block w-2 h-2 bg-[#8b5cf6] opacity-50" />
-                  Scale: 0-40 | Thinks a lot, ships less. Aware of it. Working on it.
-                </div>
-              </div>
+          {/* ── CORE ATTRIBUTES ── */}
+          <AccordionSection id="attributes" title="◆ Core Attributes" isOpen={openSections.has('attributes')} onToggle={toggleSection} defaultOpen>
+            {/* Radar Chart */}
+            <div className="rpg-panel p-4 mb-4 flex justify-center">
+              <RadarChart attributes={ATTRIBUTES} animate={statsAnimated} />
             </div>
-          )}
 
-          {/* ── ABOUT ME TAB ── */}
-          {activeTab === 'about' && (
-            <div className="space-y-4">
-              {/* Operating Manual */}
-              <div className="rpg-panel p-4 gsap-tab-item">
-                <h2 className="section-header mb-3">◇ Operating Manual</h2>
-                <div className="mb-3 text-[12px] text-[#22d3ee] border border-[#22d3ee]/20 bg-[#22d3ee]/5 p-2">
-                  A personal user manual for collaborators, teammates, and future self.
-                </div>
-                <div className="space-y-4">
-                  {MANUAL_SECTIONS.map(section => (
-                    <div key={section.title} className="rpg-panel p-3 gsap-tab-item">
-                      <h3
-                        className="text-[11px] tracking-wider uppercase mb-2 flex items-center gap-2"
-                        style={{ fontFamily: 'var(--font-press-start)', color: '#dcc06e' }}
-                      >
-                        <span className="text-[#8b5cf6]">{section.icon}</span>
-                        {section.title}
-                      </h3>
-                      <ul className="space-y-1.5">
-                        {section.content.map((line, i) => (
-                          <li key={i} className="text-[13px] text-[#e8dcc8] leading-relaxed flex items-start gap-2">
-                            <span className="text-[#2a3050] shrink-0 mt-0.5">›</span>
-                            {line}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Active Conditions */}
-              <div className="rpg-panel p-4 gsap-tab-item">
-                <h2 className="section-header mb-4">◇ Active Conditions</h2>
-
-                <h3 className="text-[11px] text-[#22c55e] tracking-widest uppercase mb-2" style={{ fontFamily: 'var(--font-press-start)' }}>
-                  Buffs
-                </h3>
-                <div className="grid grid-cols-1 gap-2 mb-6">
-                  {CONDITIONS.filter(c => c.type === 'buff').map(cond => (
-                    <div key={cond.name} className="status-card rpg-panel p-3 flex items-start gap-3 border-l-2 border-l-[#22c55e] gsap-tab-item">
-                      <span className="text-lg shrink-0">{cond.icon}</span>
-                      <div className="flex-1 min-w-0">
-                        <span className="text-[13px] font-bold text-[#22c55e]">{cond.name}</span>
-                        <p className="text-[12px] text-[#e8dcc8] mt-0.5">{cond.description}</p>
-                        <p className="text-[11px] text-[#8892a8] mt-1 italic">Source: {cond.source}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                <h3 className="text-[11px] text-[#ef4444] tracking-widest uppercase mb-2" style={{ fontFamily: 'var(--font-press-start)' }}>
-                  Debuffs
-                </h3>
-                <div className="grid grid-cols-1 gap-2">
-                  {CONDITIONS.filter(c => c.type === 'debuff').map(cond => (
-                    <div key={cond.name} className="status-card rpg-panel p-3 flex items-start gap-3 border-l-2 border-l-[#ef4444] gsap-tab-item">
-                      <span className="text-lg shrink-0">{cond.icon}</span>
-                      <div className="flex-1 min-w-0">
-                        <span className="text-[13px] font-bold text-[#ef4444]">{cond.name}</span>
-                        <p className="text-[12px] text-[#e8dcc8] mt-0.5">{cond.description}</p>
-                        <p className="text-[11px] text-[#8892a8] mt-1 italic">Source: {cond.source}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* ── SKILLS TAB ── */}
-          {activeTab === 'skills' && (
-            <div className="space-y-4">
-              <div className="rpg-panel p-4 gsap-tab-item">
-                <h2 className="section-header mb-4">◇ Capability Map</h2>
-                <div className="space-y-5">
-                  {CAPABILITIES.map(domain => (
-                    <div key={domain.domain} className="gsap-tab-item">
-                      <div className="flex items-center gap-2 mb-2">
-                        <span style={{ color: domain.color }}>{domain.icon}</span>
-                        <span className="text-[13px] font-bold" style={{ color: domain.color }}>
-                          {domain.domain}
-                        </span>
-                      </div>
-                      <div className="space-y-2 ml-5">
-                        {domain.capabilities.map(cap => (
-                          <div key={cap.name} className="flex items-start justify-between gap-2">
-                            <div className="flex-1 min-w-0">
-                              <div className="flex items-center gap-2 flex-wrap">
-                                <span className="text-[13px] text-[#e8dcc8]">{cap.name}</span>
-                                <ProficiencyBadge level={cap.level} />
-                              </div>
-                              <p className="text-[12px] text-[#8892a8] mt-0.5">{cap.evidence}</p>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* ── INNER WORK TAB ── */}
-          {activeTab === 'growth' && (
-            <div className="space-y-4">
-              {/* Character Dynamics */}
-              <div className="rpg-panel p-4 gsap-tab-item">
-                <h2 className="section-header mb-3">◈ Character Dynamics</h2>
-                <div className="mb-3 text-[12px] text-[#8b5cf6] border border-[#8b5cf6]/20 bg-[#8b5cf6]/5 p-2">
-                  The ongoing internal debates. Everyone has them — these are mine.
-                </div>
-                <div className="space-y-5">
-                  {DYNAMICS.map(d => (
-                    <div key={d.name} className="gsap-tab-item">
+            {/* Stat Bars */}
+            <div ref={statBarsRef}>
+              <div className="space-y-3">
+                {ATTRIBUTES.map(attr => (
+                  <div key={attr.abbr} className="stat-row flex items-start gap-3">
+                    <span
+                      className="w-12 text-[11px] font-bold shrink-0 pt-0.5"
+                      style={{ color: attr.color, fontFamily: 'var(--font-press-start)' }}
+                    >
+                      {attr.abbr}
+                    </span>
+                    <div className="flex-1">
                       <div className="flex items-center justify-between mb-1">
-                        <span className="text-[13px] font-bold text-[#e8dcc8]">{d.name}</span>
-                        <span className={`text-[9px] px-1.5 py-0.5 ${
-                          d.severity === 'critical'
-                            ? 'bg-[#ef4444]/20 text-[#ef4444] border border-[#ef4444]/30'
-                            : d.severity === 'high'
-                            ? 'bg-[#f59e0b]/20 text-[#f59e0b] border border-[#f59e0b]/30'
-                            : 'bg-[#3b82f6]/20 text-[#3b82f6] border border-[#3b82f6]/30'
-                        }`}>
-                          {d.severity.toUpperCase()}
+                        <span className="text-[13px] text-[#e8dcc8] font-bold">{attr.label}</span>
+                        <span className="text-[12px] text-[#8892a8] tabular-nums">
+                          <span className="gsap-counter" data-target={attr.value}>0</span>/{attr.max}
                         </span>
                       </div>
-
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="text-[11px] text-[#22d3ee] w-20 sm:w-24 text-right shrink-0">{d.sideA}</span>
-                        <div className="flex-1 relative">
-                          <div className="tension-bar" />
-                          <div className="tension-marker" style={{ left: `${d.position}%` }} />
-                        </div>
-                        <span className="text-[11px] text-[#8b5cf6] w-20 sm:w-24 shrink-0">{d.sideB}</span>
+                      <div className="stat-bar-track border border-[#2a3050] mb-1">
+                        <div
+                          className="gsap-stat-fill stat-bar-fill"
+                          data-width={`${(attr.value / attr.max) * 100}%`}
+                          style={{
+                            width: '0%',
+                            background: `linear-gradient(90deg, ${attr.color}cc, ${attr.color})`,
+                          }}
+                        />
                       </div>
-
-                      <div className="flex items-center justify-between text-[11px] text-[#8892a8] mb-1">
-                        <span>{d.conversationsA} convos</span>
-                        <span>{d.conversationsB} convos</span>
-                      </div>
-                      <p className="text-[12px] text-[#8892a8]">{d.description}</p>
+                      <p className="text-[12px] text-[#8892a8] leading-relaxed">{attr.description}</p>
                     </div>
-                  ))}
-                </div>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-3 text-[12px] text-[#8892a8] flex items-center gap-1">
+                <span className="inline-block w-2 h-2 bg-[#8b5cf6] opacity-50" />
+                Scale: 0-40 | Thinks a lot, ships less. Aware of it. Working on it.
+              </div>
+            </div>
+          </AccordionSection>
 
-                {/* Saboteur Cycle */}
-                <div className="mt-6 pt-4 border-t border-[#2a3050]">
+          {/* ── OPERATING MANUAL ── */}
+          <AccordionSection id="manual" title="◇ Operating Manual" isOpen={openSections.has('manual')} onToggle={toggleSection}>
+            <div className="mb-3 text-[12px] text-[#22d3ee] border border-[#22d3ee]/20 bg-[#22d3ee]/5 p-2">
+              A personal user manual for collaborators, teammates, and future self.
+            </div>
+            <div className="space-y-4">
+              {MANUAL_SECTIONS.map(section => (
+                <div key={section.title} className="rpg-panel p-3">
                   <h3
-                    className="text-[11px] text-[#ef4444] tracking-widest uppercase mb-3"
-                    style={{ fontFamily: 'var(--font-press-start)' }}
+                    className="text-[11px] tracking-wider uppercase mb-2 flex items-center gap-2"
+                    style={{ fontFamily: 'var(--font-press-start)', color: '#dcc06e' }}
                   >
-                    ⚠ Saboteur Cycle
+                    <span className="text-[#8b5cf6]">{section.icon}</span>
+                    {section.title}
                   </h3>
-                  <div className="space-y-2">
-                    {SABOTEUR_CYCLE.map(s => (
-                      <div key={s.name} className="flex items-center gap-3">
-                        <div className="flex items-center gap-1 shrink-0 w-28">
-                          <span className="text-[13px] text-[#e8dcc8] font-bold">{s.name}</span>
-                          <span className="text-[11px] text-[#ef4444]">{s.score}</span>
-                        </div>
-                        <div className="flex-1">
-                          <div className="stat-bar-track border border-[#2a3050] h-2">
-                            <div
-                              className="gsap-saboteur-fill h-full"
-                              data-width={`${(s.score / 10) * 100}%`}
-                              style={{ width: '0%', background: 'linear-gradient(90deg, #ef4444cc, #ef4444)', transition: 'width 1.0s ease-out' }}
-                            />
+                  <ul className="space-y-1.5">
+                    {section.content.map((line, i) => (
+                      <li key={i} className="text-[13px] text-[#e8dcc8] leading-relaxed flex items-start gap-2">
+                        <span className="text-[#2a3050] shrink-0 mt-0.5">›</span>
+                        {line}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </AccordionSection>
+
+          {/* ── ACTIVE CONDITIONS ── */}
+          <AccordionSection id="conditions" title="◇ Active Conditions" isOpen={openSections.has('conditions')} onToggle={toggleSection}>
+            <h3 className="text-[11px] text-[#22c55e] tracking-widest uppercase mb-2" style={{ fontFamily: 'var(--font-press-start)' }}>
+              Buffs
+            </h3>
+            <div className="grid grid-cols-1 gap-2 mb-6">
+              {CONDITIONS.filter(c => c.type === 'buff').map(cond => (
+                <div key={cond.name} className="status-card rpg-panel p-3 flex items-start gap-3 border-l-2 border-l-[#22c55e]">
+                  <span className="text-lg shrink-0">{cond.icon}</span>
+                  <div className="flex-1 min-w-0">
+                    <span className="text-[13px] font-bold text-[#22c55e]">{cond.name}</span>
+                    <p className="text-[12px] text-[#e8dcc8] mt-0.5">{cond.description}</p>
+                    <p className="text-[11px] text-[#8892a8] mt-1 italic">Source: {cond.source}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <h3 className="text-[11px] text-[#ef4444] tracking-widest uppercase mb-2" style={{ fontFamily: 'var(--font-press-start)' }}>
+              Debuffs
+            </h3>
+            <div className="grid grid-cols-1 gap-2">
+              {CONDITIONS.filter(c => c.type === 'debuff').map(cond => (
+                <div key={cond.name} className="status-card rpg-panel p-3 flex items-start gap-3 border-l-2 border-l-[#ef4444]">
+                  <span className="text-lg shrink-0">{cond.icon}</span>
+                  <div className="flex-1 min-w-0">
+                    <span className="text-[13px] font-bold text-[#ef4444]">{cond.name}</span>
+                    <p className="text-[12px] text-[#e8dcc8] mt-0.5">{cond.description}</p>
+                    <p className="text-[11px] text-[#8892a8] mt-1 italic">Source: {cond.source}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </AccordionSection>
+
+          {/* ── CAPABILITY MAP ── */}
+          <AccordionSection id="capabilities" title="◇ Capability Map" isOpen={openSections.has('capabilities')} onToggle={toggleSection}>
+            <div className="space-y-5">
+              {CAPABILITIES.map(domain => (
+                <div key={domain.domain}>
+                  <div className="flex items-center gap-2 mb-2">
+                    <span style={{ color: domain.color }}>{domain.icon}</span>
+                    <span className="text-[13px] font-bold" style={{ color: domain.color }}>
+                      {domain.domain}
+                    </span>
+                  </div>
+                  <div className="space-y-2 ml-5">
+                    {domain.capabilities.map(cap => (
+                      <div key={cap.name} className="flex items-start justify-between gap-2">
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span className="text-[13px] text-[#e8dcc8]">{cap.name}</span>
+                            <ProficiencyBadge level={cap.level} />
                           </div>
+                          <p className="text-[12px] text-[#8892a8] mt-0.5">{cap.evidence}</p>
                         </div>
                       </div>
                     ))}
                   </div>
-                  <div className="mt-2 text-[12px] text-[#8892a8] italic">
-                    The loop: start something new → rationalize it → push too hard → rebuild the system → repeat
-                  </div>
                 </div>
-              </div>
+              ))}
+            </div>
+          </AccordionSection>
 
-              {/* Growth Path */}
-              <div className="rpg-panel p-4 gsap-tab-item">
-                <h2 className="section-header mb-4">◈ Growth Path</h2>
+          {/* ── CHARACTER DYNAMICS ── */}
+          <AccordionSection id="dynamics" title="◈ Character Dynamics" isOpen={openSections.has('dynamics')} onToggle={toggleSection}>
+            <div className="mb-3 text-[12px] text-[#8b5cf6] border border-[#8b5cf6]/20 bg-[#8b5cf6]/5 p-2">
+              The ongoing internal debates. Everyone has them — these are mine.
+            </div>
+            <div className="space-y-5">
+              {DYNAMICS.map(d => (
+                <div key={d.name}>
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-[13px] font-bold text-[#e8dcc8]">{d.name}</span>
+                    <span className={`text-[9px] px-1.5 py-0.5 ${
+                      d.severity === 'critical'
+                        ? 'bg-[#ef4444]/20 text-[#ef4444] border border-[#ef4444]/30'
+                        : d.severity === 'high'
+                        ? 'bg-[#f59e0b]/20 text-[#f59e0b] border border-[#f59e0b]/30'
+                        : 'bg-[#3b82f6]/20 text-[#3b82f6] border border-[#3b82f6]/30'
+                    }`}>
+                      {d.severity.toUpperCase()}
+                    </span>
+                  </div>
 
-                <h3
-                  className="text-[11px] text-[#dcc06e] tracking-widest uppercase mb-3"
-                  style={{ fontFamily: 'var(--font-press-start)' }}
-                >
-                  Class Evolution
-                </h3>
-                <div className="space-y-0 mb-6">
-                  {EVOLUTION.map((stage) => (
-                    <div key={stage.name} className={`evolution-node ${stage.active ? 'active' : ''} pb-4 gsap-tab-item`}>
-                      <div className="flex items-start gap-4">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-[11px] text-[#22d3ee] w-20 sm:w-24 text-right shrink-0">{d.sideA}</span>
+                    <div className="flex-1 relative">
+                      <div className="tension-bar" />
+                      <div className="tension-marker" style={{ left: `${d.position}%` }} />
+                    </div>
+                    <span className="text-[11px] text-[#8b5cf6] w-20 sm:w-24 shrink-0">{d.sideB}</span>
+                  </div>
+
+                  <div className="flex items-center justify-between text-[11px] text-[#8892a8] mb-1">
+                    <span>{d.conversationsA} convos</span>
+                    <span>{d.conversationsB} convos</span>
+                  </div>
+                  <p className="text-[12px] text-[#8892a8]">{d.description}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* Saboteur Cycle */}
+            <div className="mt-6 pt-4 border-t border-[#2a3050]">
+              <h3
+                className="text-[11px] text-[#ef4444] tracking-widest uppercase mb-3"
+                style={{ fontFamily: 'var(--font-press-start)' }}
+              >
+                ⚠ Saboteur Cycle
+              </h3>
+              <div className="space-y-2">
+                {SABOTEUR_CYCLE.map(s => (
+                  <div key={s.name} className="flex items-center gap-3">
+                    <div className="flex items-center gap-1 shrink-0 w-28">
+                      <span className="text-[13px] text-[#e8dcc8] font-bold">{s.name}</span>
+                      <span className="text-[11px] text-[#ef4444]">{s.score}</span>
+                    </div>
+                    <div className="flex-1">
+                      <div className="stat-bar-track border border-[#2a3050] h-2">
                         <div
-                          className={`w-8 h-8 shrink-0 flex items-center justify-center border-2 text-[10px] ${
-                            stage.active
-                              ? 'border-[#8b5cf6] bg-[#8b5cf6]/20 text-[#8b5cf6]'
-                              : stage.future
-                              ? 'border-[#2a3050] bg-transparent text-[#8892a8] border-dashed'
-                              : 'border-[#22c55e] bg-[#22c55e]/10 text-[#22c55e]'
-                          }`}
-                          style={{ fontFamily: 'var(--font-press-start)' }}
-                        >
-                          {stage.future ? '?' : stage.active ? '◆' : '✓'}
-                        </div>
-
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 flex-wrap">
-                            <span className={`text-[13px] font-bold ${stage.active ? 'text-[#8b5cf6]' : stage.future ? 'text-[#8892a8]' : 'text-[#22c55e]'}`}>
-                              {stage.name}
-                            </span>
-                            <span className="text-[11px] text-[#8892a8]">{stage.period}</span>
-                            {stage.active && (
-                              <span className="text-[9px] px-1.5 py-0.5 bg-[#8b5cf6]/20 text-[#8b5cf6] border border-[#8b5cf6]/30">
-                                CURRENT
-                              </span>
-                            )}
-                          </div>
-                          <p className="text-[12px] text-[#8892a8] mt-1">{stage.description}</p>
-                          <div className="flex flex-wrap gap-1 mt-1.5">
-                            {stage.traits.map((trait, ti) => (
-                              <span
-                                key={ti}
-                                className={`text-[10px] px-1.5 py-0.5 border ${
-                                  stage.future ? 'border-[#2a3050] text-[#8892a8] border-dashed' : 'border-[#2a3050] text-[#e8dcc8]'
-                                }`}
-                              >
-                                {trait}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
+                          className="gsap-saboteur-fill h-full"
+                          data-width={`${(s.score / 10) * 100}%`}
+                          style={{ width: '0%', background: 'linear-gradient(90deg, #ef4444cc, #ef4444)', transition: 'width 1.0s ease-out' }}
+                        />
                       </div>
                     </div>
-                  ))}
-                </div>
-
-                {/* Philosophical Loadout */}
-                <h3
-                  className="text-[11px] text-[#dcc06e] tracking-widest uppercase mb-3"
-                  style={{ fontFamily: 'var(--font-press-start)' }}
-                >
-                  Equipped Frameworks
-                </h3>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-6">
-                  {PHILOSOPHICAL_LOADOUT.map(item => (
-                    <div
-                      key={item.name}
-                      className="rpg-panel p-2 text-center gsap-tab-item"
-                      style={{ borderColor: `${item.color}30` }}
-                    >
-                      <span className="text-[12px] font-bold block" style={{ color: item.color }}>
-                        {item.name}
-                      </span>
-                      <span className="text-[11px] text-[#8892a8]">{item.uses} convos</span>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Evolution Requirements */}
-                <h3
-                  className="text-[11px] text-[#dcc06e] tracking-widest uppercase mb-3"
-                  style={{ fontFamily: 'var(--font-press-start)' }}
-                >
-                  Evolution Requirements
-                </h3>
-                <div className="space-y-2">
-                  {EVOLUTION_REQUIREMENTS.map((req, i) => (
-                    <div key={i} className="flex items-center gap-3 gsap-tab-item">
-                      <span className={`w-5 h-5 shrink-0 flex items-center justify-center border text-[10px] ${
-                        req.done ? 'border-[#22c55e] bg-[#22c55e]/20 text-[#22c55e]' : 'border-[#2a3050] text-[#8892a8]'
-                      }`}>
-                        {req.done ? '✓' : '○'}
-                      </span>
-                      <span className={`text-[13px] ${req.done ? 'text-[#22c55e] line-through' : 'text-[#e8dcc8]'}`}>
-                        {req.text}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-                <div className="mt-4 text-[12px] text-[#8892a8] border-t border-[#2a3050] pt-3">
-                  <span className="text-[#f59e0b]">⚠</span> Progress: 0/5 requirements met. The wave function remains uncollapsed.
-                </div>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-2 text-[12px] text-[#8892a8] italic">
+                The loop: start something new → rationalize it → push too hard → rebuild the system → repeat
               </div>
             </div>
-          )}
+          </AccordionSection>
+
+          {/* ── GROWTH PATH ── */}
+          <AccordionSection id="growth" title="◈ Growth Path" isOpen={openSections.has('growth')} onToggle={toggleSection}>
+            <h3
+              className="text-[11px] text-[#dcc06e] tracking-widest uppercase mb-3"
+              style={{ fontFamily: 'var(--font-press-start)' }}
+            >
+              Class Evolution
+            </h3>
+            <div className="space-y-0 mb-6">
+              {EVOLUTION.map((stage) => (
+                <div key={stage.name} className={`evolution-node ${stage.active ? 'active' : ''} pb-4`}>
+                  <div className="flex items-start gap-4">
+                    <div
+                      className={`w-8 h-8 shrink-0 flex items-center justify-center border-2 text-[10px] ${
+                        stage.active
+                          ? 'border-[#8b5cf6] bg-[#8b5cf6]/20 text-[#8b5cf6]'
+                          : stage.future
+                          ? 'border-[#2a3050] bg-transparent text-[#8892a8] border-dashed'
+                          : 'border-[#22c55e] bg-[#22c55e]/10 text-[#22c55e]'
+                      }`}
+                      style={{ fontFamily: 'var(--font-press-start)' }}
+                    >
+                      {stage.future ? '?' : stage.active ? '◆' : '✓'}
+                    </div>
+
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className={`text-[13px] font-bold ${stage.active ? 'text-[#8b5cf6]' : stage.future ? 'text-[#8892a8]' : 'text-[#22c55e]'}`}>
+                          {stage.name}
+                        </span>
+                        <span className="text-[11px] text-[#8892a8]">{stage.period}</span>
+                        {stage.active && (
+                          <span className="text-[9px] px-1.5 py-0.5 bg-[#8b5cf6]/20 text-[#8b5cf6] border border-[#8b5cf6]/30">
+                            CURRENT
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-[12px] text-[#8892a8] mt-1">{stage.description}</p>
+                      <div className="flex flex-wrap gap-1 mt-1.5">
+                        {stage.traits.map((trait, ti) => (
+                          <span
+                            key={ti}
+                            className={`text-[10px] px-1.5 py-0.5 border ${
+                              stage.future ? 'border-[#2a3050] text-[#8892a8] border-dashed' : 'border-[#2a3050] text-[#e8dcc8]'
+                            }`}
+                          >
+                            {trait}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Philosophical Loadout */}
+            <h3
+              className="text-[11px] text-[#dcc06e] tracking-widest uppercase mb-3"
+              style={{ fontFamily: 'var(--font-press-start)' }}
+            >
+              Equipped Frameworks
+            </h3>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-6">
+              {PHILOSOPHICAL_LOADOUT.map(item => (
+                <div
+                  key={item.name}
+                  className="rpg-panel p-2 text-center"
+                  style={{ borderColor: `${item.color}30` }}
+                >
+                  <span className="text-[12px] font-bold block" style={{ color: item.color }}>
+                    {item.name}
+                  </span>
+                  <span className="text-[11px] text-[#8892a8]">{item.uses} convos</span>
+                </div>
+              ))}
+            </div>
+
+            {/* Evolution Requirements */}
+            <h3
+              className="text-[11px] text-[#dcc06e] tracking-widest uppercase mb-3"
+              style={{ fontFamily: 'var(--font-press-start)' }}
+            >
+              Evolution Requirements
+            </h3>
+            <div className="space-y-2">
+              {EVOLUTION_REQUIREMENTS.map((req, i) => (
+                <div key={i} className="flex items-center gap-3">
+                  <span className={`w-5 h-5 shrink-0 flex items-center justify-center border text-[10px] ${
+                    req.done ? 'border-[#22c55e] bg-[#22c55e]/20 text-[#22c55e]' : 'border-[#2a3050] text-[#8892a8]'
+                  }`}>
+                    {req.done ? '✓' : '○'}
+                  </span>
+                  <span className={`text-[13px] ${req.done ? 'text-[#22c55e] line-through' : 'text-[#e8dcc8]'}`}>
+                    {req.text}
+                  </span>
+                </div>
+              ))}
+            </div>
+            <div className="mt-4 text-[12px] text-[#8892a8] border-t border-[#2a3050] pt-3">
+              <span className="text-[#f59e0b]">⚠</span> Progress: 0/5 requirements met. The wave function remains uncollapsed.
+            </div>
+          </AccordionSection>
+
         </div>
 
         {/* ═══ FOOTER ═══ */}
@@ -1194,7 +1083,7 @@ export default function ProfilePage() {
             className="text-[10px] text-[#8892a8] tracking-widest"
             style={{ fontFamily: 'var(--font-press-start)' }}
           >
-            JKURN v0.5 — CHARACTER PROFILE SYSTEM
+            JKURN v0.6 — CHARACTER PROFILE SYSTEM
           </p>
         </div>
       </div>

@@ -134,36 +134,31 @@ body {
   animation: shimmer 2s ease-in-out infinite;
 }
 
-/* Tab navigation */
-.tab-nav {
+/* Accordion */
+.accordion-header {
+  width: 100%;
   display: flex;
-  gap: 0;
-  border-bottom: 2px solid var(--border-panel);
-  background: var(--bg-dark);
-}
-
-.tab-button {
-  padding: 10px 16px;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text-muted);
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
   background: transparent;
   border: none;
-  border-bottom: 2px solid transparent;
   cursor: pointer;
-  transition: color 0.2s ease, border-color 0.2s ease;
-  font-family: var(--font-geist-mono), monospace;
-  white-space: nowrap;
-  margin-bottom: -2px;
+  transition: background 0.2s ease;
 }
-
-.tab-button:hover {
-  color: var(--text-warm);
+.accordion-header:hover {
+  background: var(--bg-panel-hover);
 }
-
-.tab-button.active {
-  color: var(--text-gold);
-  border-bottom-color: var(--border-gold);
+.accordion-chevron {
+  color: var(--text-muted);
+  transition: transform 0.3s ease;
+  font-size: 14px;
+}
+.accordion-chevron.open {
+  transform: rotate(90deg);
+}
+.accordion-content {
+  overflow: hidden;
 }
 
 /* Pixel art glow */
@@ -276,18 +271,6 @@ body {
   }
   .section-header {
     font-size: 0.6rem;
-  }
-  .tab-nav {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-  }
-  .tab-nav::-webkit-scrollbar {
-    display: none;
-  }
-  .tab-button {
-    font-size: 11px;
-    padding: 8px 12px;
   }
   .radar-chart {
     max-width: 240px;
