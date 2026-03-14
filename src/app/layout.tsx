@@ -1,11 +1,6 @@
 import type { Metadata } from "next";
-import { Inter, Geist_Mono, Press_Start_2P } from "next/font/google";
+import { Geist_Mono, Press_Start_2P } from "next/font/google";
 import "./globals.css";
-
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-});
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
@@ -19,8 +14,8 @@ const pressStart = Press_Start_2P({
 });
 
 export const metadata: Metadata = {
-  title: "Jonathan Kurniawan — Profile",
-  description: "AI Strategist & Builder — Personal Profile",
+  title: "JKURN — Character Profile",
+  description: "RPG Character Sheet for Jonathan Kurniawan — Quantum Architect",
 };
 
 export default function RootLayout({
@@ -30,7 +25,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${geistMono.variable} ${pressStart.variable} antialiased`}>
+      <body className={`${geistMono.variable} ${pressStart.variable} antialiased`}>
         {children}
       </body>
     </html>
