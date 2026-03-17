@@ -149,6 +149,11 @@ body {
 .accordion-header:hover {
   background: var(--bg-panel-hover);
 }
+.accordion-header:focus-visible {
+  outline: 2px solid var(--border-gold);
+  outline-offset: -2px;
+  background: var(--bg-panel-hover);
+}
 .accordion-chevron {
   color: var(--text-muted);
   transition: transform 0.3s ease;
@@ -231,7 +236,7 @@ body {
   inset: 0;
   pointer-events: none;
   z-index: 50;
-  opacity: 0.03;
+  opacity: 0.06;
   background: repeating-linear-gradient(
     0deg,
     transparent,
@@ -262,6 +267,19 @@ body {
 .radar-chart {
   display: block;
   margin: 0 auto;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .scanline-overlay {
+    display: none;
+  }
 }
 
 /* Responsive */

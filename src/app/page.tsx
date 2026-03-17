@@ -395,6 +395,7 @@ export default function ProfilePage() {
   const [booted, setBooted] = useState(false);
   const [statsAnimated, setStatsAnimated] = useState(false);
   const [openSections, setOpenSections] = useState<Set<string>>(() => new Set(['attributes']));
+  const prefersReducedMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const bootRef = useRef<HTMLDivElement>(null);
   const mainRef = useRef<HTMLDivElement>(null);
   const statBarsRef = useRef<HTMLDivElement>(null);
@@ -422,8 +423,8 @@ export default function ProfilePage() {
       setTimeout(() => setStatsAnimated(true), 200);
     };
 
-    // Skip animation when tab/iframe is hidden — GSAP ticker pauses in hidden docs
-    if (document.hidden) {
+    // Skip animation when tab/iframe is hidden or user prefers reduced motion
+    if (document.hidden || prefersReducedMotion) {
       complete();
       return;
     }
@@ -450,7 +451,7 @@ export default function ProfilePage() {
 
   // Animate main content on boot complete — skip when GSAP ticker is sleeping (hidden iframe)
   useGSAP(() => {
-    if (!booted || !mainRef.current || document.hidden) return;
+    if (!booted || !mainRef.current || document.hidden || prefersReducedMotion) return;
 
     const panels = mainRef.current.querySelectorAll('.gsap-panel');
     gsap.from(panels, {
@@ -516,7 +517,7 @@ export default function ProfilePage() {
 
   // ─── Step 1: ScrambleText hero name decode ───
   useGSAP(() => {
-    if (!booted || !heroNameRef.current || document.hidden) return;
+    if (!booted || !heroNameRef.current || document.hidden || prefersReducedMotion) return;
     gsap.to(heroNameRef.current, {
       duration: 1.8,
       delay: 0.6,
@@ -531,7 +532,7 @@ export default function ProfilePage() {
 
   // ─── Step 2: SplitText bio character cascade ───
   useGSAP(() => {
-    if (!booted || !heroBioRef.current || document.hidden) return;
+    if (!booted || !heroBioRef.current || document.hidden || prefersReducedMotion) return;
     const split = new SplitText(heroBioRef.current, { type: 'chars' });
     gsap.from(split.chars, {
       opacity: 0,
@@ -548,7 +549,7 @@ export default function ProfilePage() {
 
   // ─── Step 3: SVG glitch filter (intermittent) ───
   useGSAP(() => {
-    if (!booted || !heroCardRef.current || document.hidden) return;
+    if (!booted || !heroCardRef.current || document.hidden || prefersReducedMotion) return;
     const turbulence = document.querySelector('#glitch feTurbulence');
     const displacement = document.querySelector('#glitch feDisplacementMap');
     if (!turbulence || !displacement) return;
@@ -574,7 +575,7 @@ export default function ProfilePage() {
 
   // ─── Step 5: Neon glow pulse (ambient) ───
   useGSAP(() => {
-    if (!booted || document.hidden) return;
+    if (!booted || document.hidden || prefersReducedMotion) return;
     gsap.to('.rpg-panel-gold', {
       boxShadow: '0 0 12px rgba(200,168,78,0.3), inset 0 0 12px rgba(200,168,78,0.05)',
       duration: 2,
@@ -593,7 +594,7 @@ export default function ProfilePage() {
 
   // ─── Step 6: Neon flicker on section headers (intermittent) ───
   useEffect(() => {
-    if (!booted || document.hidden) return;
+    if (!booted || document.hidden || prefersReducedMotion) return;
     const headers = document.querySelectorAll<HTMLElement>('.section-header');
     const tweens: gsap.core.Tween[] = [];
 
@@ -622,7 +623,7 @@ export default function ProfilePage() {
 
   // ─── Hover scramble on stat counters ───
   useEffect(() => {
-    if (!booted || !statBarsRef.current || document.hidden) return;
+    if (!booted || !statBarsRef.current || document.hidden || prefersReducedMotion) return;
 
     const rows = statBarsRef.current.querySelectorAll<HTMLElement>('.stat-row');
     const cleanups: (() => void)[] = [];
@@ -741,6 +742,42 @@ export default function ProfilePage() {
               <p ref={heroBioRef} className="text-[13px] text-[#8892a8] leading-relaxed max-w-md">
                 {CHARACTER.bio}
               </p>
+
+              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 pt-1">
+                {[
+                  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/jonathan-kurniawan/', color: '#3b82f6' },
+                  { label: 'YouTube', href: 'https://www.youtube.com/@Jkurn', color: '#ef4444' },
+                  { label: 'X', href: 'https://x.com/jonakurn', color: '#8892a8' },
+                  { label: 'Substack', href: 'https://freerangefriaiday.substack.com/', color: '#f59e0b' },
+                  { label: 'Medium', href: 'https://medium.com/@jkurn', color: '#22c55e' },
+                  { label: 'Insta', href: 'https://www.instagram.com/jonathan.l.kurniawan/', color: '#ec4899' },
+                  { label: 'GitHub', href: 'https://github.com/jkurn', color: '#8b5cf6' },
+                ].map(link => (
+                  <a
+                    key={link.label}
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[10px] px-2 py-1 border transition-colors"
+                    style={{
+                      fontFamily: 'var(--font-press-start)',
+                      color: link.color,
+                      borderColor: `${link.color}4d`,
+                      backgroundColor: `${link.color}1a`,
+                    }}
+                    onMouseEnter={e => {
+                      (e.target as HTMLElement).style.backgroundColor = `${link.color}33`;
+                      (e.target as HTMLElement).style.borderColor = `${link.color}80`;
+                    }}
+                    onMouseLeave={e => {
+                      (e.target as HTMLElement).style.backgroundColor = `${link.color}1a`;
+                      (e.target as HTMLElement).style.borderColor = `${link.color}4d`;
+                    }}
+                  >
+                    {link.label}
+                  </a>
+                ))}
+              </div>
             </div>
           </div>
         </header>
@@ -936,20 +973,23 @@ export default function ProfilePage() {
               </h3>
               <div className="space-y-2">
                 {SABOTEUR_CYCLE.map(s => (
-                  <div key={s.name} className="flex items-center gap-3">
-                    <div className="flex items-center gap-1 shrink-0 w-28">
-                      <span className="text-[13px] text-[#e8dcc8] font-bold">{s.name}</span>
-                      <span className="text-[11px] text-[#ef4444]">{s.score}</span>
-                    </div>
-                    <div className="flex-1">
-                      <div className="stat-bar-track border border-[#2a3050] h-2">
-                        <div
-                          className="gsap-saboteur-fill h-full"
-                          data-width={`${(s.score / 10) * 100}%`}
-                          style={{ width: '0%', background: 'linear-gradient(90deg, #ef4444cc, #ef4444)', transition: 'width 1.0s ease-out' }}
-                        />
+                  <div key={s.name}>
+                    <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-1 shrink-0 w-28">
+                        <span className="text-[13px] text-[#e8dcc8] font-bold">{s.name}</span>
+                        <span className="text-[11px] text-[#ef4444]">{s.score}</span>
+                      </div>
+                      <div className="flex-1">
+                        <div className="stat-bar-track border border-[#2a3050] h-2">
+                          <div
+                            className="gsap-saboteur-fill h-full"
+                            data-width={`${(s.score / 10) * 100}%`}
+                            style={{ width: '0%', background: 'linear-gradient(90deg, #ef4444cc, #ef4444)', transition: 'width 1.0s ease-out' }}
+                          />
+                        </div>
                       </div>
                     </div>
+                    <p className="text-[11px] text-[#8892a8] mt-0.5 ml-[7.5rem] italic">{s.effect}</p>
                   </div>
                 ))}
               </div>
@@ -1083,7 +1123,7 @@ export default function ProfilePage() {
             className="text-[10px] text-[#8892a8] tracking-widest"
             style={{ fontFamily: 'var(--font-press-start)' }}
           >
-            JKURN v0.6 — CHARACTER PROFILE SYSTEM
+            JKURN v0.7 — CHARACTER PROFILE SYSTEM
           </p>
         </div>
       </div>
