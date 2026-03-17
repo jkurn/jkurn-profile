@@ -111,7 +111,7 @@ export default function AccordionSection({
         id={`accordion-${id}`}
         className="accordion-content"
       >
-        <div ref={innerRef} className="p-4 pt-0">
+        <div ref={innerRef} className="p-5 pt-0">
           {children}
         </div>
       </div>

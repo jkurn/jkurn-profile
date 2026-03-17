@@ -99,7 +99,7 @@ body {
 .section-header {
   font-family: var(--font-press-start), monospace;
   color: var(--text-gold);
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   letter-spacing: 0.15em;
   text-transform: uppercase;
 }
@@ -107,7 +107,7 @@ body {
 /* Stat bars */
 .stat-bar-track {
   background: #1a1a2e;
-  height: 12px;
+  height: 14px;
   position: relative;
   overflow: hidden;
 }
@@ -180,7 +180,7 @@ body {
 /* Tension bar */
 .tension-bar {
   position: relative;
-  height: 8px;
+  height: 10px;
   background: linear-gradient(90deg, var(--accent-cyan), transparent 50%, var(--accent-purple));
   border-radius: 0;
 }
@@ -288,7 +288,7 @@ body {
     --pixel-size: 4px;
   }
   .section-header {
-    font-size: 0.6rem;
+    font-size: 0.7rem;
   }
   .radar-chart {
     max-width: 240px;
