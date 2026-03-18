@@ -224,11 +224,11 @@ const EVOLUTION: EvolutionStage[] = [
 ];
 
 const EVOLUTION_REQUIREMENTS = [
-  { text: 'Land AI leadership role ($200K+ AUD)', done: false },
+  { text: 'Establish global AI leadership authority', done: false },
   { text: 'Ship 3 major products to production', done: true },
   { text: 'Build and publish an AI governance framework', done: true },
   { text: 'Publish consistently for 6 months', done: false },
-  { text: 'Launch a revenue-generating product', done: false },
+  { text: 'Ship AI agents that generate revenue autonomously', done: false },
 ];
 
 const PHILOSOPHICAL_LOADOUT = [
@@ -672,6 +672,7 @@ export default function ProfilePage() {
                   { label: 'Medium', href: 'https://medium.com/@jkurn', color: '#22c55e' },
                   { label: 'Insta', href: 'https://www.instagram.com/jonathan.l.kurniawan/', color: '#ec4899' },
                   { label: 'GitHub', href: 'https://github.com/jkurn', color: '#8b5cf6' },
+                  { label: 'Twitch', href: 'https://www.twitch.tv/jkurniawan', color: '#9146ff' },
                 ].map(link => (
                   <a
                     key={link.label}
