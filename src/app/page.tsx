@@ -24,58 +24,58 @@ const CHARACTER = {
   subclass: 'Manifesting Generator',
   level: 32,
   xp: { current: 9800000, next: 12000000 },
-  bio: 'Curious about everything, builder of things, connector of dots. Probably has a framework for that. Definitely has a framework for the framework.',
+  bio: 'AI strategist and builder. Turns complex problems into systems, frameworks, and shipped products. Based in Sydney — has called six countries home.',
 };
 
 // ─── RADAR ATTRIBUTES (6-axis) ──────────────────────────────────
 const ATTRIBUTES = [
   {
-    label: 'Intelligence',
-    abbr: 'INT',
-    value: 38,
-    max: 40,
-    color: '#8b5cf6',
-    description: 'Curious about everything, connects dots across fields that have no business being connected. Will happily disappear into a rabbit hole for hours.',
-  },
-  {
-    label: 'Wisdom',
-    abbr: 'WIS',
-    value: 30,
+    label: 'AI Strategy',
+    abbr: 'AI',
+    value: 37,
     max: 40,
     color: '#22d3ee',
-    description: 'Genuinely self-aware — sometimes too much. Tends to analyze feelings rather than actually feel them. Knows this, working on it.',
+    description: 'Lives and breathes AI — from governance frameworks to hands-on prompt engineering. Builds with AI daily, advises others on how to do it responsibly.',
   },
   {
-    label: 'Charisma',
-    abbr: 'CHA',
-    value: 26,
+    label: 'Systems Thinking',
+    abbr: 'SYS',
+    value: 36,
+    max: 40,
+    color: '#8b5cf6',
+    description: 'Connects dots across fields that have no business being connected. Give him a messy problem and he\'ll hand back a framework.',
+  },
+  {
+    label: 'Communication',
+    abbr: 'COM',
+    value: 33,
     max: 40,
     color: '#ec4899',
-    description: 'Lights up in conversations about ideas — surprisingly good at getting people excited. Still figuring out how to put himself out there publicly.',
+    description: 'Lights up in conversations about ideas. Translates complex technical concepts into language that lands with any audience.',
   },
   {
-    label: 'Constitution',
-    abbr: 'CON',
-    value: 24,
+    label: 'Execution',
+    abbr: 'EXE',
+    value: 30,
     max: 40,
     color: '#f59e0b',
-    description: 'Can go deep on something for hours when it clicks. Sustained routine and discipline? That\'s a different conversation entirely.',
+    description: 'Ships real things — AI chatbots, knowledge pipelines, automation workflows. Gets from whiteboard to production.',
   },
   {
-    label: 'Willpower',
-    abbr: 'WILL',
-    value: 18,
+    label: 'Leadership',
+    abbr: 'LDR',
+    value: 31,
     max: 40,
-    color: '#ef4444',
-    description: 'Great at starting things. Has approximately 47 open browser tabs of half-finished projects to prove it. The spirit is willing.',
+    color: '#22c55e',
+    description: 'Leads by making the complex simple. Mentors teams, aligns stakeholders, and knows when to make the call.',
   },
   {
-    label: 'Strength',
-    abbr: 'STR',
-    value: 14,
+    label: 'Adaptability',
+    abbr: 'ADP',
+    value: 34,
     max: 40,
     color: '#f97316',
-    description: 'The gym membership is... aspirational. Honestly the stat that needs the most love. One day.',
+    description: 'Six countries, multiple industries, three career pivots. Thrives in ambiguity and picks up new domains fast.',
   },
 ];
 
@@ -121,21 +121,10 @@ const MANUAL_SECTIONS: ManualEntry[] = [
     title: 'What Drains Me',
     icon: '▼',
     content: [
-      'Repetitive admin work with no thinking involved — my energy drops fast.',
-      'Having to push forward on something I\'ve mentally moved past. I know this about myself and I\'m working on it.',
+      'Repetitive admin work with no thinking involved — I do my best work when there\'s a real problem to solve.',
       'Meetings that could\'ve been a doc. (You\'ve heard this one before, but I really mean it.)',
       'Executing without understanding why. I don\'t need to agree with everything, but I need to understand the reasoning.',
-    ],
-  },
-  {
-    title: 'The Five Faces',
-    icon: '★',
-    content: [
-      'The Professor — Comes alive when teaching or mentoring someone who\'s genuinely curious. Could talk frameworks all day.',
-      'The Catalyst — Shows up with ten new ideas before coffee. High energy, contagious enthusiasm, short bursts.',
-      'The Commander — Emerges when things get serious and someone needs to make the call. Not my default mode, but it\'s there.',
-      'The Alchemist — Mixes ideas from wildly different places into something new. Probably my signature thing.',
-      'The Architect — Give me a whiteboard and stand back. Wants to build the system, the structure, the operating model.',
+      'Low-autonomy environments — I thrive when trusted to figure out the "how" once I know the "what."',
     ],
   },
   {
@@ -144,9 +133,8 @@ const MANUAL_SECTIONS: ManualEntry[] = [
     content: [
       'I do my best work when I understand the bigger picture — the "why" behind what we\'re doing.',
       'I\'ll probably respond to your problem with a framework. Feel free to tell me to just answer the question.',
-      'I\'m a strong starter, less strong finisher. Pairing me with someone detail-oriented is a cheat code.',
       'I genuinely want pushback on my ideas. I\'d rather be wrong early than wrong late.',
-      'I\'ll bring energy, ideas, and structure to any project. In return, I just ask for a bit of patience when I go down rabbit holes.',
+      'I\'ll bring energy, ideas, and structure to any project. Pair me with strong executors and we\'ll move fast.',
     ],
   },
 ];
@@ -154,22 +142,16 @@ const MANUAL_SECTIONS: ManualEntry[] = [
 // ─── ACTIVE CONDITIONS ──────────────────────────────────────────
 interface Condition {
   name: string;
-  type: 'buff' | 'debuff';
   icon: string;
   description: string;
   source: string;
 }
 
 const CONDITIONS: Condition[] = [
-  { name: 'Dual Mind Stance', type: 'buff', icon: '⚡', description: 'Can switch between big-picture brainstorming and heads-down building. Two modes, one brain.', source: 'Innate trait' },
-  { name: 'Framework Arsenal', type: 'buff', icon: '📚', description: 'Has a mental toolkit of 10+ frameworks ready for any situation. Possibly overkill for choosing lunch.', source: 'Years of collecting mental models' },
-  { name: 'Metacognitive Shield', type: 'buff', icon: '🛡', description: 'Unusually aware of his own thinking patterns and biases. Doesn\'t always act on that awareness, but it\'s there.', source: 'Lots of self-reflection' },
-  { name: 'Quantum Processing', type: 'buff', icon: '🔮', description: 'Comfortable holding multiple conflicting ideas at once without needing to pick a winner right away.', source: 'Multicultural upbringing' },
-  { name: 'Elevated Threshold', type: 'debuff', icon: '⏳', description: 'Tends to over-polish before shipping. The "just one more tweak" trap is very real.', source: 'The planning-to-doing ratio' },
-  { name: 'Island Hopper', type: 'debuff', icon: '🏝', description: 'Gets excited about new things a bit too easily. Depth is the aspiration, breadth is the reality.', source: 'A restless spirit' },
-  { name: 'System Builder\'s Compulsion', type: 'debuff', icon: '📊', description: 'Will occasionally build an entire tracking system to avoid having a feeling about something.', source: 'A very analytical brain' },
-  { name: 'Accumulation Drive', type: 'debuff', icon: '🔄', description: 'Says "this is my simplification year" while signing up for three new tools. Every year.', source: 'Curiosity vs. minimalism' },
-  { name: 'Vulnerability Gap', type: 'debuff', icon: '👁', description: 'More open and honest in writing than in person. Working on closing that gap.', source: 'A work in progress' },
+  { name: 'Dual Mind Stance', icon: '⚡', description: 'Can switch between big-picture brainstorming and heads-down building. Two modes, one brain.', source: 'Innate trait' },
+  { name: 'Framework Arsenal', icon: '📚', description: 'Has a mental toolkit of 10+ frameworks ready for any situation. Possibly overkill for choosing lunch.', source: 'Years of collecting mental models' },
+  { name: 'Metacognitive Shield', icon: '🛡', description: 'Unusually aware of his own thinking patterns and biases. Uses that awareness to course-correct fast.', source: 'Lots of self-reflection' },
+  { name: 'Quantum Processing', icon: '🔮', description: 'Comfortable holding multiple conflicting ideas at once without needing to pick a winner right away.', source: 'Multicultural upbringing' },
 ];
 
 // ─── CAPABILITY MAP ─────────────────────────────────────────────
@@ -212,111 +194,17 @@ const CAPABILITIES: CapabilityDomain[] = [
     ],
   },
   {
-    domain: 'Inner Work',
-    icon: '☽',
-    color: '#ec4899',
-    capabilities: [
-      { name: 'Jungian Analysis', level: 'Advanced', evidence: 'Archetypes, shadow work, individuation — genuinely fascinated' },
-      { name: 'Self-Optimization', level: 'Advanced', evidence: 'Always looking for ways to grow and get better' },
-      { name: 'Existential Navigation', level: 'Advanced', evidence: 'Thinks deeply about meaning, purpose, and what matters' },
-      { name: 'Mindfulness', level: 'Proficient', evidence: 'Genuine interest, but the optimizer brain makes this tricky' },
-    ],
-  },
-  {
-    domain: 'Cultural Navigation',
-    icon: '◈',
-    color: '#22c55e',
-    capabilities: [
-      { name: 'Geographic Adaptability', level: 'Advanced', evidence: 'Has called six countries home — adapts quickly' },
-      { name: 'Cross-Cultural Fluency', level: 'Proficient', evidence: 'Reads rooms across cultures, still learning every day' },
-      { name: 'Identity Synthesis', level: 'Developing', evidence: 'Figuring out how all these different parts of himself fit together' },
-    ],
-  },
-  {
     domain: 'Execution & Output',
     icon: '▶',
     color: '#f59e0b',
     capabilities: [
       { name: 'Vision Articulation', level: 'Expert', evidence: 'Can explain complex ideas in a way that actually lands' },
       { name: 'Project Initiation', level: 'Advanced', evidence: 'Strong starts, lots of momentum — the exciting part' },
-      { name: 'Sustained Delivery', level: 'Developing', evidence: 'The follow-through muscle. Building it.' },
-      { name: 'Physical Discipline', level: 'Developing', evidence: 'See: STR stat. Aspirational.' },
+      { name: 'Sustained Delivery', level: 'Advanced', evidence: 'Shipped multiple production systems end-to-end — each one gets smoother' },
     ],
   },
 ];
 
-// ─── CHARACTER DYNAMICS ─────────────────────────────────────────
-interface Dynamic {
-  name: string;
-  sideA: string;
-  sideB: string;
-  position: number;
-  conversationsA: number;
-  conversationsB: number;
-  description: string;
-  severity: 'critical' | 'high' | 'moderate';
-}
-
-const DYNAMICS: Dynamic[] = [
-  {
-    name: 'The Core Paradox',
-    sideA: 'Self-Acceptance',
-    sideB: 'Self-Optimization',
-    position: 48,
-    conversationsA: 341,
-    conversationsB: 375,
-    description: 'Wants to fully accept himself AND become the best version of himself. These two things don\'t always agree.',
-    severity: 'critical',
-  },
-  {
-    name: 'The Execution Gap',
-    sideA: 'Planning',
-    sideB: 'Shipping',
-    position: 63,
-    conversationsA: 552,
-    conversationsB: 318,
-    description: 'Loves the planning phase a little too much. The ideas are always flowing — shipping them is the real boss fight.',
-    severity: 'high',
-  },
-  {
-    name: 'The Depth Dilemma',
-    sideA: 'Breadth',
-    sideB: 'Depth',
-    position: 65,
-    conversationsA: 339,
-    conversationsB: 180,
-    description: 'Wants to go deep on one thing but keeps discovering interesting new things. The classic generalist\'s dilemma.',
-    severity: 'high',
-  },
-  {
-    name: 'The Accumulation Paradox',
-    sideA: 'Simplify',
-    sideB: 'Accumulate',
-    position: 34,
-    conversationsA: 300,
-    conversationsB: 155,
-    description: 'Keeps saying "simplify" while the bookmarks folder and tool stack quietly grows. Self-aware about it, at least.',
-    severity: 'high',
-  },
-  {
-    name: 'The Path Split',
-    sideA: 'Sovereign Builder',
-    sideB: 'Institutional Path',
-    position: 31,
-    conversationsA: 163,
-    conversationsB: 73,
-    description: 'Heart says build something of his own. Head says the safety net is nice. Still figuring this one out.',
-    severity: 'moderate',
-  },
-];
-
-// ─── SABOTEUR CYCLE ─────────────────────────────────────────────
-const SABOTEUR_CYCLE = [
-  { name: 'Restless', score: 6.8, effect: 'Ooh, shiny new project! (halfway through the current one)' },
-  { name: 'Hyper-Rational', score: 6.3, effect: 'Feelings? Let me build a spreadsheet about those.' },
-  { name: 'Hyper-Achiever', score: 5.9, effect: 'Rest day? Sounds like a day to feel guilty about not working.' },
-  { name: 'Controller', score: 5.3, effect: 'If the system isn\'t working, I\'ll just... build a new system.' },
-];
 
 // ─── GROWTH PATH ────────────────────────────────────────────────
 interface EvolutionStage {
@@ -329,27 +217,27 @@ interface EvolutionStage {
 }
 
 const EVOLUTION: EvolutionStage[] = [
-  { name: 'Code Apprentice', period: '2023 Q1-Q2', description: 'Discovered AI and immediately went all in. Built GPTs, played virtual C-suite. The spark.', traits: ['Builder', 'Executive'], active: false, future: false },
-  { name: 'System Builder', period: '2023 Q3 — 2024 Q2', description: 'Found a niche in AI governance. Started creating content, building frameworks. Things got real.', traits: ['AI Governance', 'Content Creator', 'Framework Designer'], active: false, future: false },
-  { name: 'The Shaper', period: '2024 Q3 — Present', description: 'Doing a bit of everything — building, strategizing, creating, exploring. Hasn\'t picked just one thing yet (and kind of likes it that way).', traits: ['Builder', 'Founder', 'Strategist', 'Creator'], active: true, future: false },
-  { name: '??? Sovereign Synthesizer', period: 'Future', description: 'Picks one lane and goes all in. The scattered energy becomes focused force. Someday.', traits: ['???'], active: false, future: true },
+  { name: 'Code Apprentice', period: '2023 Q1-Q2', description: 'Discovered AI and immediately went all in. Built GPTs, prototyped executive-level AI tools. The spark.', traits: ['Builder', 'Explorer'], active: false, future: false },
+  { name: 'System Builder', period: '2023 Q3 — 2024 Q2', description: 'Found a niche in AI governance and strategy. Started creating content, shipping frameworks, advising orgs.', traits: ['AI Governance', 'Content Creator', 'Framework Designer'], active: false, future: false },
+  { name: 'The Shaper', period: '2024 Q3 — Present', description: 'Building at the intersection of AI strategy, product, and execution. Shipping real systems while advising others on how to do the same.', traits: ['Builder', 'Strategist', 'Advisor', 'Creator'], active: true, future: false },
+  { name: 'Sovereign Synthesizer', period: 'Next', description: 'Leading AI transformation at scale — whether inside an organization or building one from scratch.', traits: ['AI Leadership', 'Product Vision', 'Team Builder'], active: false, future: true },
 ];
 
 const EVOLUTION_REQUIREMENTS = [
-  { text: 'Collapse the quantum identity — choose a primary', done: false },
-  { text: 'Ship 3 major projects to production', done: false },
+  { text: 'Land AI leadership role ($200K+ AUD)', done: false },
+  { text: 'Ship 3 major products to production', done: true },
+  { text: 'Build and publish an AI governance framework', done: true },
   { text: 'Publish consistently for 6 months', done: false },
-  { text: 'Complete the Financial Truth Sheet', done: false },
-  { text: 'Resolve the geographic equation', done: false },
+  { text: 'Launch a revenue-generating product', done: false },
 ];
 
 const PHILOSOPHICAL_LOADOUT = [
-  { name: 'Jungian Psychology', uses: 241, color: '#8b5cf6' },
-  { name: 'Positive Psychology', uses: 220, color: '#22c55e' },
-  { name: 'Existentialism', uses: 220, color: '#3b82f6' },
-  { name: 'Lean / Agile', uses: 104, color: '#f59e0b' },
-  { name: 'Human Design', uses: 70, color: '#ec4899' },
-  { name: 'Behavioral Economics', uses: 59, color: '#22d3ee' },
+  { name: 'Lean / Agile', color: '#f59e0b' },
+  { name: 'Systems Thinking', color: '#8b5cf6' },
+  { name: 'Behavioral Economics', color: '#22d3ee' },
+  { name: 'Design Thinking', color: '#22c55e' },
+  { name: 'PARA / PKM', color: '#ec4899' },
+  { name: 'Positive Psychology', color: '#3b82f6' },
 ];
 
 // ─── ACHIEVEMENT LOG ──────────────────────────────────────────────
@@ -366,9 +254,10 @@ const ACHIEVEMENTS: AchievementCategory[] = [
     icon: '⚡',
     color: '#22d3ee',
     items: [
-      'Designed AI governance frameworks for enterprise adoption',
-      'Built and deployed AI chatbot reducing manual research by 60%',
-      'Created 30+ custom AI automation skills and workflows',
+      'Designed AI governance frameworks adopted by enterprise clients for responsible AI deployment',
+      'Built and deployed AI chatbot (Nielsen Bot) — reduced manual research time by 60%',
+      'Created 30+ custom AI automation skills and agent workflows for business operations',
+      'Advised organizations across APAC on AI adoption strategy and risk management',
     ],
   },
   {
@@ -376,19 +265,20 @@ const ACHIEVEMENTS: AchievementCategory[] = [
     icon: '▶',
     color: '#8b5cf6',
     items: [
-      'Architected personal knowledge system — 2,450+ atomic notes',
-      'Built AI bookmark-to-knowledge pipeline (Python, AWS Lambda)',
-      'Shipped this cyberpunk character profile (Next.js, GSAP, Tailwind)',
+      'Shipped production AI systems: chatbots, knowledge pipelines, automation agents',
+      'Built AI bookmark-to-knowledge pipeline — Python, AWS Lambda, automated ingestion',
+      'Architected a 2,450+ note personal knowledge system (Obsidian, PARA framework)',
+      'Built this site from scratch — Next.js, GSAP animations, deployed on GitHub Pages',
     ],
   },
   {
-    category: 'Thought Leadership',
+    category: 'Thought Leadership & Advisory',
     icon: '◆',
     color: '#f59e0b',
     items: [
-      'Published AI strategy content on Medium and Substack',
-      'Advised organizations on responsible AI implementation',
-      'Synthesized 3,954 AI conversations into actionable frameworks',
+      'Published AI strategy content on Medium and Substack reaching thousands of readers',
+      'Active consulting engagements with enterprise clients on AI implementation',
+      'Developed repeatable frameworks for AI readiness assessment and governance setup',
     ],
   },
 ];
@@ -435,7 +325,7 @@ const BOOT_LINES = [
 export default function ProfilePage() {
   const [booted, setBooted] = useState(false);
   const [statsAnimated, setStatsAnimated] = useState(false);
-  const [openSections, setOpenSections] = useState<Set<string>>(() => new Set(['attributes']));
+  const [openSections, setOpenSections] = useState<Set<string>>(() => new Set(['achievements', 'attributes']));
   const prefersReducedMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const bootRef = useRef<HTMLDivElement>(null);
   const mainRef = useRef<HTMLDivElement>(null);
@@ -544,17 +434,6 @@ export default function ProfilePage() {
     setTimeout(() => { if (xpBarRef.current) xpBarRef.current.style.width = target; }, 80);
   }, [statsAnimated]);
 
-  // Animate saboteur bars via CSS transition when dynamics accordion opens
-  useEffect(() => {
-    if (!openSections.has('dynamics')) return;
-    const timer = setTimeout(() => {
-      const bars = document.querySelectorAll<HTMLElement>('.gsap-saboteur-fill');
-      bars.forEach((bar, i) => {
-        setTimeout(() => { bar.style.width = bar.dataset.width || '0%'; }, i * 80);
-      });
-    }, 350);
-    return () => clearTimeout(timer);
-  }, [openSections]);
 
   // ─── Step 1: ScrambleText hero name decode ───
   useGSAP(() => {
@@ -826,6 +705,30 @@ export default function ProfilePage() {
         {/* ═══ ACCORDION SECTIONS ═══ */}
         <div className="space-y-4">
 
+          {/* ── ACHIEVEMENT LOG ── */}
+          <AccordionSection id="achievements" title="★ Achievement Log" isOpen={openSections.has('achievements')} onToggle={toggleSection} defaultOpen>
+            <div className="space-y-4">
+              {ACHIEVEMENTS.map(cat => (
+                <div key={cat.category}>
+                  <div className="flex items-center gap-2 mb-2">
+                    <span style={{ color: cat.color }}>{cat.icon}</span>
+                    <span className="text-sm font-bold" style={{ color: cat.color }}>
+                      {cat.category}
+                    </span>
+                  </div>
+                  <div className="space-y-1.5 ml-5">
+                    {cat.items.map((item, i) => (
+                      <div key={i} className="flex items-start gap-2">
+                        <span className="text-[#5a6478] shrink-0 mt-0.5">›</span>
+                        <span className="text-sm text-[#e8dcc8]">{item}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </AccordionSection>
+
           {/* ── CORE ATTRIBUTES ── */}
           <AccordionSection id="attributes" title="◆ Core Attributes" isOpen={openSections.has('attributes')} onToggle={toggleSection} defaultOpen>
             {/* Radar Chart */}
@@ -868,95 +771,8 @@ export default function ProfilePage() {
               </div>
               <div className="mt-3 text-[13px] text-[#8892a8] flex items-center gap-1">
                 <span className="inline-block w-2 h-2 bg-[#8b5cf6] opacity-50" />
-                Scale: 0-40 | Thinks a lot, ships less. Aware of it. Working on it.
+                Scale: 0-40 | Self-assessed from 3,954 AI conversations and psychometric frameworks.
               </div>
-            </div>
-          </AccordionSection>
-
-          {/* ── ACHIEVEMENT LOG ── */}
-          <AccordionSection id="achievements" title="★ Achievement Log" isOpen={openSections.has('achievements')} onToggle={toggleSection}>
-            <div className="space-y-4">
-              {ACHIEVEMENTS.map(cat => (
-                <div key={cat.category}>
-                  <div className="flex items-center gap-2 mb-2">
-                    <span style={{ color: cat.color }}>{cat.icon}</span>
-                    <span className="text-sm font-bold" style={{ color: cat.color }}>
-                      {cat.category}
-                    </span>
-                  </div>
-                  <div className="space-y-1.5 ml-5">
-                    {cat.items.map((item, i) => (
-                      <div key={i} className="flex items-start gap-2">
-                        <span className="text-[#5a6478] shrink-0 mt-0.5">›</span>
-                        <span className="text-sm text-[#e8dcc8]">{item}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </AccordionSection>
-
-          {/* ── OPERATING MANUAL ── */}
-          <AccordionSection id="manual" title="◇ Operating Manual" isOpen={openSections.has('manual')} onToggle={toggleSection}>
-            <div className="mb-3 text-[13px] text-[#22d3ee] border border-[#22d3ee]/20 bg-[#22d3ee]/5 p-2">
-              A personal user manual for collaborators, teammates, and future self.
-            </div>
-            <div className="space-y-4">
-              {MANUAL_SECTIONS.map(section => (
-                <div key={section.title} className="rpg-panel p-3">
-                  <h3
-                    className="text-xs tracking-wider uppercase mb-2 flex items-center gap-2"
-                    style={{ fontFamily: 'var(--font-press-start)', color: '#dcc06e' }}
-                  >
-                    <span className="text-[#8b5cf6]">{section.icon}</span>
-                    {section.title}
-                  </h3>
-                  <ul className="space-y-1.5">
-                    {section.content.map((line, i) => (
-                      <li key={i} className="text-sm text-[#e8dcc8] leading-relaxed flex items-start gap-2">
-                        <span className="text-[#5a6478] shrink-0 mt-0.5">›</span>
-                        {line}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
-          </AccordionSection>
-
-          {/* ── ACTIVE CONDITIONS ── */}
-          <AccordionSection id="conditions" title="◇ Active Conditions" isOpen={openSections.has('conditions')} onToggle={toggleSection}>
-            <h3 className="text-xs text-[#22c55e] tracking-widest uppercase mb-2" style={{ fontFamily: 'var(--font-press-start)' }}>
-              Buffs
-            </h3>
-            <div className="grid grid-cols-1 gap-2 mb-6">
-              {CONDITIONS.filter(c => c.type === 'buff').map(cond => (
-                <div key={cond.name} className="status-card rpg-panel p-3 flex items-start gap-3 border-l-2 border-l-[#22c55e]">
-                  <span className="text-lg shrink-0">{cond.icon}</span>
-                  <div className="flex-1 min-w-0">
-                    <span className="text-sm font-bold text-[#22c55e]">{cond.name}</span>
-                    <p className="text-[13px] text-[#e8dcc8] mt-0.5">{cond.description}</p>
-                    <p className="text-xs text-[#8892a8] mt-1 italic">Source: {cond.source}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <h3 className="text-xs text-[#ef4444] tracking-widest uppercase mb-2" style={{ fontFamily: 'var(--font-press-start)' }}>
-              Debuffs
-            </h3>
-            <div className="grid grid-cols-1 gap-2">
-              {CONDITIONS.filter(c => c.type === 'debuff').map(cond => (
-                <div key={cond.name} className="status-card rpg-panel p-3 flex items-start gap-3 border-l-2 border-l-[#ef4444]">
-                  <span className="text-lg shrink-0">{cond.icon}</span>
-                  <div className="flex-1 min-w-0">
-                    <span className="text-sm font-bold text-[#ef4444]">{cond.name}</span>
-                    <p className="text-[13px] text-[#e8dcc8] mt-0.5">{cond.description}</p>
-                    <p className="text-xs text-[#8892a8] mt-1 italic">Source: {cond.source}</p>
-                  </div>
-                </div>
-              ))}
             </div>
           </AccordionSection>
 
@@ -989,83 +805,53 @@ export default function ProfilePage() {
             </div>
           </AccordionSection>
 
-          {/* ── CHARACTER DYNAMICS ── */}
-          <AccordionSection id="dynamics" title="◈ Character Dynamics" isOpen={openSections.has('dynamics')} onToggle={toggleSection}>
-            <div className="mb-3 text-[13px] text-[#8b5cf6] border border-[#8b5cf6]/20 bg-[#8b5cf6]/5 p-2">
-              The ongoing internal debates. Everyone has them — these are mine.
+          {/* ── HOW I WORK ── */}
+          <AccordionSection id="manual" title="◇ How I Work" isOpen={openSections.has('manual')} onToggle={toggleSection}>
+            <div className="mb-3 text-[13px] text-[#22d3ee] border border-[#22d3ee]/20 bg-[#22d3ee]/5 p-2">
+              A quick guide for collaborators, teammates, and anyone thinking about working together.
             </div>
-            <div className="space-y-5">
-              {DYNAMICS.map(d => (
-                <div key={d.name}>
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm font-bold text-[#e8dcc8]">{d.name}</span>
-                    <span className={`text-[11px] px-1.5 py-0.5 ${
-                      d.severity === 'critical'
-                        ? 'bg-[#ef4444]/20 text-[#ef4444] border border-[#ef4444]/30'
-                        : d.severity === 'high'
-                        ? 'bg-[#f59e0b]/20 text-[#f59e0b] border border-[#f59e0b]/30'
-                        : 'bg-[#3b82f6]/20 text-[#3b82f6] border border-[#3b82f6]/30'
-                    }`}>
-                      {d.severity.toUpperCase()}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-xs text-[#22d3ee] w-20 sm:w-24 text-right shrink-0">{d.sideA}</span>
-                    <div className="flex-1 relative">
-                      <div className="tension-bar" />
-                      <div className="tension-marker" style={{ left: `${d.position}%` }} />
-                    </div>
-                    <span className="text-xs text-[#8b5cf6] w-20 sm:w-24 shrink-0">{d.sideB}</span>
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs text-[#8892a8] mb-1">
-                    <span>{d.conversationsA} convos</span>
-                    <span>{d.conversationsB} convos</span>
-                  </div>
-                  <p className="text-[13px] text-[#8892a8]">{d.description}</p>
+            <div className="space-y-4">
+              {MANUAL_SECTIONS.map(section => (
+                <div key={section.title} className="rpg-panel p-3">
+                  <h3
+                    className="text-xs tracking-wider uppercase mb-2 flex items-center gap-2"
+                    style={{ fontFamily: 'var(--font-press-start)', color: '#dcc06e' }}
+                  >
+                    <span className="text-[#8b5cf6]">{section.icon}</span>
+                    {section.title}
+                  </h3>
+                  <ul className="space-y-1.5">
+                    {section.content.map((line, i) => (
+                      <li key={i} className="text-sm text-[#e8dcc8] leading-relaxed flex items-start gap-2">
+                        <span className="text-[#5a6478] shrink-0 mt-0.5">›</span>
+                        {line}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               ))}
             </div>
+          </AccordionSection>
 
-            {/* Saboteur Cycle */}
-            <div className="mt-6 pt-4 border-t border-[#2a3050]">
-              <h3
-                className="text-xs text-[#ef4444] tracking-widest uppercase mb-3"
-                style={{ fontFamily: 'var(--font-press-start)' }}
-              >
-                ⚠ Saboteur Cycle
-              </h3>
-              <div className="space-y-2">
-                {SABOTEUR_CYCLE.map(s => (
-                  <div key={s.name}>
-                    <div className="flex items-center gap-3">
-                      <div className="flex items-center gap-1 shrink-0 w-28">
-                        <span className="text-sm text-[#e8dcc8] font-bold">{s.name}</span>
-                        <span className="text-xs text-[#ef4444]">{s.score}</span>
-                      </div>
-                      <div className="flex-1">
-                        <div className="stat-bar-track border border-[#2a3050] h-2">
-                          <div
-                            className="gsap-saboteur-fill h-full"
-                            data-width={`${(s.score / 10) * 100}%`}
-                            style={{ width: '0%', background: 'linear-gradient(90deg, #ef4444cc, #ef4444)', transition: 'width 1.0s ease-out' }}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    <p className="text-xs text-[#8892a8] mt-0.5 ml-[7.5rem] italic">{s.effect}</p>
+          {/* ── STRENGTHS ── */}
+          <AccordionSection id="conditions" title="⚡ Strengths" isOpen={openSections.has('conditions')} onToggle={toggleSection}>
+            <div className="grid grid-cols-1 gap-2">
+              {CONDITIONS.map(cond => (
+                <div key={cond.name} className="status-card rpg-panel p-3 flex items-start gap-3 border-l-2 border-l-[#22c55e]">
+                  <span className="text-lg shrink-0">{cond.icon}</span>
+                  <div className="flex-1 min-w-0">
+                    <span className="text-sm font-bold text-[#22c55e]">{cond.name}</span>
+                    <p className="text-[13px] text-[#e8dcc8] mt-0.5">{cond.description}</p>
+                    <p className="text-xs text-[#8892a8] mt-1 italic">{cond.source}</p>
                   </div>
-                ))}
-              </div>
-              <div className="mt-2 text-[13px] text-[#8892a8] italic">
-                The loop: start something new → rationalize it → push too hard → rebuild the system → repeat
-              </div>
+                </div>
+              ))}
             </div>
           </AccordionSection>
 
+
           {/* ── GROWTH PATH ── */}
-          <AccordionSection id="growth" title="◈ Growth Path" isOpen={openSections.has('growth')} onToggle={toggleSection}>
+          <AccordionSection id="growth" title="◈ Where I'm Headed" isOpen={openSections.has('growth')} onToggle={toggleSection}>
             <h3
               className="text-xs text-[#dcc06e] tracking-widest uppercase mb-3"
               style={{ fontFamily: 'var(--font-press-start)' }}
@@ -1137,7 +923,6 @@ export default function ProfilePage() {
                   <span className="text-[13px] font-bold block" style={{ color: item.color }}>
                     {item.name}
                   </span>
-                  <span className="text-xs text-[#8892a8]">{item.uses} convos</span>
                 </div>
               ))}
             </div>
@@ -1164,7 +949,7 @@ export default function ProfilePage() {
               ))}
             </div>
             <div className="mt-4 text-[13px] text-[#8892a8] border-t border-[#2a3050] pt-3">
-              <span className="text-[#f59e0b]">⚠</span> Progress: 0/5 requirements met. The wave function remains uncollapsed.
+              <span className="text-[#22c55e]">▶</span> Progress: 2/5 requirements met. Next evolution loading...
             </div>
           </AccordionSection>
 
@@ -1173,13 +958,7 @@ export default function ProfilePage() {
         {/* ═══ FOOTER ═══ */}
         <div className="rpg-panel p-4 text-center space-y-1 gsap-panel">
           <p className="text-[13px] text-[#8892a8]">
-            Character data derived from 3,954 conversations | ~9.8M words | 1,076 days
-          </p>
-          <p className="text-xs text-[#8892a8]">
-            ChatGPT (1,856) + Claude (2,098) + Second Brain (35 files)
-          </p>
-          <p className="text-xs text-[#8892a8] mt-2">
-            Frameworks: LIWC · Big Five · McClelland · McAdams · PrinciplesYou · Saboteur Assessment
+            Profile powered by AI-assisted self-analysis across thousands of conversations and psychometric frameworks.
           </p>
         </div>
 
@@ -1188,7 +967,7 @@ export default function ProfilePage() {
             className="text-[11px] text-[#8892a8] tracking-widest"
             style={{ fontFamily: 'var(--font-press-start)' }}
           >
-            JKURN v0.8 — CHARACTER PROFILE SYSTEM
+            JKURN v0.9 — CHARACTER PROFILE SYSTEM
           </p>
         </div>
       </div>
