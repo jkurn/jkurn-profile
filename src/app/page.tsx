@@ -672,7 +672,7 @@ export default function ProfilePage() {
                   { label: 'Medium', href: 'https://medium.com/@jkurn', color: '#22c55e' },
                   { label: 'Insta', href: 'https://www.instagram.com/jonathan.l.kurniawan/', color: '#ec4899' },
                   { label: 'GitHub', href: 'https://github.com/jkurn', color: '#8b5cf6' },
-                  { label: 'Twitch', href: 'https://www.twitch.tv/jkurniawan', color: '#9146ff' },
+                  { label: 'Twitch', href: 'https://www.twitch.tv/jkurniawan', color: '#00e6cb' },
                 ].map(link => (
                   <a
                     key={link.label}
