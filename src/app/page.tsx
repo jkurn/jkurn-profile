@@ -9,6 +9,8 @@ import { CustomEase } from 'gsap/CustomEase';
 import PixelAvatar from '@/components/PixelAvatar';
 import RadarChart from '@/components/RadarChart';
 import AccordionSection from '@/components/AccordionSection';
+import HumanManualView from '@/components/HumanManualView';
+import AgentManualView from '@/components/AgentManualView';
 
 gsap.registerPlugin(useGSAP, ScrambleTextPlugin, SplitText, CustomEase);
 
@@ -325,6 +327,7 @@ const BOOT_LINES = [
 export default function ProfilePage() {
   const [booted, setBooted] = useState(false);
   const [statsAnimated, setStatsAnimated] = useState(false);
+  const [activeTab, setActiveTab] = useState<'profile' | 'humans' | 'agents'>('profile');
   const [openSections, setOpenSections] = useState<Set<string>>(() => new Set(['achievements', 'attributes']));
   const prefersReducedMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const bootRef = useRef<HTMLDivElement>(null);
@@ -703,8 +706,36 @@ export default function ProfilePage() {
           </div>
         </header>
 
-        {/* ═══ ACCORDION SECTIONS ═══ */}
-        <div className="space-y-4">
+        {/* ═══ TAB NAVIGATION ═══ */}
+        <nav className="rpg-panel p-1 flex gap-1 gsap-panel">
+          {([
+            { id: 'profile' as const, label: '◆ Profile', color: '#dcc06e' },
+            { id: 'humans' as const, label: '◇ For Humans', color: '#8b5cf6' },
+            { id: 'agents' as const, label: '⚡ For AI Agents', color: '#22d3ee' },
+          ]).map(tab => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className="flex-1 py-2 px-3 text-center transition-all"
+              style={{
+                fontFamily: 'var(--font-press-start)',
+                fontSize: '0.6rem',
+                color: activeTab === tab.id ? tab.color : '#8892a8',
+                background: activeTab === tab.id ? `${tab.color}15` : 'transparent',
+                borderBottom: activeTab === tab.id ? `2px solid ${tab.color}` : '2px solid transparent',
+              }}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </nav>
+
+        {/* ═══ TAB CONTENT ═══ */}
+        {activeTab === 'humans' && <HumanManualView />}
+        {activeTab === 'agents' && <AgentManualView />}
+
+        {/* ═══ PROFILE ACCORDION SECTIONS ═══ */}
+        {activeTab === 'profile' && <div className="space-y-4">
 
           {/* ── ACHIEVEMENT LOG ── */}
           <AccordionSection id="achievements" title="★ Achievement Log" isOpen={openSections.has('achievements')} onToggle={toggleSection} defaultOpen>
@@ -954,7 +985,7 @@ export default function ProfilePage() {
             </div>
           </AccordionSection>
 
-        </div>
+        </div>}
 
         {/* ═══ FOOTER ═══ */}
         <div className="rpg-panel p-4 text-center space-y-1 gsap-panel">
@@ -968,7 +999,7 @@ export default function ProfilePage() {
             className="text-[11px] text-[#8892a8] tracking-widest"
             style={{ fontFamily: 'var(--font-press-start)' }}
           >
-            JKURN v0.9 — CHARACTER PROFILE SYSTEM
+            JKURN v1.0 — CHARACTER PROFILE SYSTEM
           </p>
         </div>
       </div>
