@@ -23,7 +23,8 @@ if (typeof window !== 'undefined') {
 const CHARACTER = {
   name: 'JONATHAN KURNIAWAN',
   title: 'The Shaper',
-  subclass: 'Manifesting Generator',
+  subclass: 'AI Agent Builder-Strategist',
+  badge: 'Responsible AI Leader',
   level: 32,
   xp: { current: 9800000, next: 12000000 },
   bio: 'AI strategist and builder. Turns complex problems into systems, frameworks, and shipped products. Based in Sydney — has called six countries home.',
@@ -613,7 +614,7 @@ export default function ProfilePage() {
         </filter>
       </svg>
 
-      <div className="max-w-5xl mx-auto px-4 pt-8 space-y-4">
+      <div className="max-w-5xl mx-auto px-4 pt-12 space-y-4">
 
         {/* ═══ HERO ═══ */}
         <header ref={heroCardRef} className="rpg-panel rpg-panel-gold p-6 gsap-panel glitch-target">
@@ -637,6 +638,9 @@ export default function ProfilePage() {
                   </span>
                   <span className="text-[#22d3ee] text-[13px] px-2 py-0.5 border border-[#22d3ee]/30 bg-[#22d3ee]/10">
                     {CHARACTER.subclass}
+                  </span>
+                  <span className="text-[#22c55e] text-[13px] px-2 py-0.5 border border-[#22c55e]/30 bg-[#22c55e]/10">
+                    {CHARACTER.badge}
                   </span>
                 </div>
               </div>
@@ -662,7 +666,7 @@ export default function ProfilePage() {
                 </div>
               </div>
 
-              <p ref={heroBioRef} className="text-sm text-[#8892a8] leading-relaxed max-w-md">
+              <p ref={heroBioRef} className="text-sm text-[#8892a8] leading-relaxed max-w-xl">
                 {CHARACTER.bio}
               </p>
 
@@ -738,7 +742,7 @@ export default function ProfilePage() {
         {activeTab === 'profile' && <div className="space-y-4">
 
           {/* ── ACHIEVEMENT LOG ── */}
-          <AccordionSection id="achievements" title="★ Achievement Log" isOpen={openSections.has('achievements')} onToggle={toggleSection} defaultOpen>
+          <AccordionSection id="achievements" title="🏆 Achievement Log" isOpen={openSections.has('achievements')} onToggle={toggleSection} defaultOpen>
             <div className="space-y-4">
               {ACHIEVEMENTS.map(cat => (
                 <div key={cat.category}>
@@ -762,7 +766,7 @@ export default function ProfilePage() {
           </AccordionSection>
 
           {/* ── CORE ATTRIBUTES ── */}
-          <AccordionSection id="attributes" title="◆ Core Attributes" isOpen={openSections.has('attributes')} onToggle={toggleSection} defaultOpen>
+          <AccordionSection id="attributes" title="📊 Core Attributes" isOpen={openSections.has('attributes')} onToggle={toggleSection} defaultOpen>
             {/* Radar Chart */}
             <div className="rpg-panel p-4 mb-4 flex justify-center">
               <RadarChart attributes={ATTRIBUTES} animate={statsAnimated} />
@@ -809,7 +813,7 @@ export default function ProfilePage() {
           </AccordionSection>
 
           {/* ── CAPABILITY MAP ── */}
-          <AccordionSection id="capabilities" title="◇ Capability Map" isOpen={openSections.has('capabilities')} onToggle={toggleSection}>
+          <AccordionSection id="capabilities" title="🗺️ Capability Map" isOpen={openSections.has('capabilities')} onToggle={toggleSection}>
             <div className="space-y-5">
               {CAPABILITIES.map(domain => (
                 <div key={domain.domain}>
@@ -838,7 +842,7 @@ export default function ProfilePage() {
           </AccordionSection>
 
           {/* ── HOW I WORK ── */}
-          <AccordionSection id="manual" title="◇ How I Work" isOpen={openSections.has('manual')} onToggle={toggleSection}>
+          <AccordionSection id="manual" title="📋 How I Work" isOpen={openSections.has('manual')} onToggle={toggleSection}>
             <div className="mb-3 text-[13px] text-[#22d3ee] border border-[#22d3ee]/20 bg-[#22d3ee]/5 p-2">
               A quick guide for collaborators, teammates, and anyone thinking about working together.
             </div>
@@ -866,7 +870,7 @@ export default function ProfilePage() {
           </AccordionSection>
 
           {/* ── STRENGTHS ── */}
-          <AccordionSection id="conditions" title="⚡ Strengths" isOpen={openSections.has('conditions')} onToggle={toggleSection}>
+          <AccordionSection id="conditions" title="💪 Strengths" isOpen={openSections.has('conditions')} onToggle={toggleSection}>
             <div className="grid grid-cols-1 gap-2">
               {CONDITIONS.map(cond => (
                 <div key={cond.name} className="status-card rpg-panel p-3 flex items-start gap-3 border-l-2 border-l-[#22c55e]">
@@ -883,7 +887,7 @@ export default function ProfilePage() {
 
 
           {/* ── GROWTH PATH ── */}
-          <AccordionSection id="growth" title="◈ Where I'm Headed" isOpen={openSections.has('growth')} onToggle={toggleSection}>
+          <AccordionSection id="growth" title="🚀 Where I'm Headed" isOpen={openSections.has('growth')} onToggle={toggleSection}>
             <h3
               className="text-xs text-[#dcc06e] tracking-widest uppercase mb-3"
               style={{ fontFamily: 'var(--font-press-start)' }}

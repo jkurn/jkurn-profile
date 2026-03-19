@@ -8,7 +8,7 @@ const MANUAL_INTRO = 'I\'m an ENTP AI strategist and builder — pattern-recogni
 const SECTIONS = [
   {
     id: 'hm-think',
-    title: '◈ How I Think',
+    title: '🧠 How I Think',
     content: [
       'ENTP in practice: I go with the flow, hunt for novelty, and hold multiple mental models simultaneously. I\'m not looking for THE answer — I\'m mapping the landscape of possible answers and seeing which fits.',
       'Deep analytical mode: I see patterns others miss because I\'m comfortable holding contradictions. I\'ll notice the thread connecting something you said last month to a completely different domain, and suddenly the connection makes the whole system clearer.',
@@ -52,7 +52,7 @@ const SECTIONS = [
   },
   {
     id: 'hm-communicate',
-    title: '◇ How to Communicate With Me',
+    title: '💬 How to Communicate With Me',
     content: [
       'Be direct and intellectually honest. No corporate speak. No "let\'s circle back" or "low-hanging fruit." Say what you mean.',
       'Bring your own thinking. I respond well to people who aren\'t just asking questions but genuinely thinking alongside me. Disagree with me — I want the friction of different perspectives.',
@@ -63,7 +63,7 @@ const SECTIONS = [
   },
   {
     id: 'hm-values',
-    title: '★ What I Value',
+    title: '💎 What I Value',
     content: [
       'Significance with belonging: Being deeply known by people who matter, for something real. Not shallow success or broad recognition.',
       'Integrity alignment: Actions matching stated values. If you say something matters and then don\'t act like it, that gap bothers me.',
@@ -74,7 +74,7 @@ const SECTIONS = [
   },
   {
     id: 'hm-drains',
-    title: '▼ What Drains Me',
+    title: '🔋 What Drains Me',
     content: [
       'Shallow small talk and forced networking',
       'Administrative work, budgeting, paperwork — these are energy vampires',
@@ -85,7 +85,7 @@ const SECTIONS = [
   },
   {
     id: 'hm-lead',
-    title: '◆ How I Lead',
+    title: '👑 How I Lead',
     content: [
       'I\'ve led teams up to 60 people (scaled engineering at Bukalapak from 12 to 60). Leadership style: build trust through fast, accurate thinking and direct communication.',
       'I lead by seeing what others miss — the pattern, the constraint, the real problem hiding beneath the stated problem — and translating that into actionable frameworks.',
@@ -94,7 +94,7 @@ const SECTIONS = [
   },
   {
     id: 'hm-strengths',
-    title: '▶ My Strengths',
+    title: '💪 My Strengths',
     content: [
       'Pattern recognition across domains — connecting dots others don\'t see',
       'Systems thinking and architectural design — seeing how pieces fit together',
@@ -106,7 +106,7 @@ const SECTIONS = [
   },
   {
     id: 'hm-growth',
-    title: '◈ My Growth Edges',
+    title: '🌱 My Growth Edges',
     content: [
       'Execution at the finish line: I can think circles around problems, but perfectionism activates right when I\'m about to ship. The last 10% takes as long as the first 90%.',
       'Staying committed to one path long enough for a verdict: I\'m an Island Hopper. I generate novelty, explore new frameworks, see adjacent possibilities. Working on trusting my own reasoning and following through.',
@@ -116,7 +116,7 @@ const SECTIONS = [
   },
   {
     id: 'hm-help',
-    title: '⚡ How to Help Me',
+    title: '🤝 How to Help Me',
     content: [
       'Hold me accountable to what I said I\'d do. I generate clarity, then sometimes re-analyze instead of acting. When I say "I\'m going to do X," and I start second-guessing, tell me to keep going.',
       'Call out when I\'m building a system as a substitute for doing the thing. "You\'ve mapped it, now execute it" is sometimes exactly what I need.',
@@ -127,7 +127,7 @@ const SECTIONS = [
   },
   {
     id: 'hm-context',
-    title: '◇ Personal Context',
+    title: '🌏 Personal Context',
     subsections: [
       {
         label: 'Background',
