@@ -132,7 +132,7 @@ const SECTIONS = [
       {
         label: 'Background',
         items: [
-          'Age 32, based in Sydney. Moves between Jakarta, Dubai, and Sydney depending on the work.',
+          'Age 32, based in Sydney. Has lived and worked across Jakarta, Dubai, Canada, and Sydney.',
           'Languages: English (primary), Indonesian (cultural and business fluency).',
         ],
       },

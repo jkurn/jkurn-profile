@@ -76,7 +76,7 @@ export default function AgentManualView() {
         <div className="space-y-0.5">
           <KeyValue label="name">Jonathan Kurniawan</KeyValue>
           <KeyValue label="role">CEO & Head of AI Platform Engineering, Bridge AI Knowledge</KeyValue>
-          <KeyValue label="location">Sydney, Australia (works across Sydney, Jakarta, Dubai)</KeyValue>
+          <KeyValue label="location">Sydney, Australia (works across Sydney, Jakarta, Dubai, Canada)</KeyValue>
           <KeyValue label="expertise">Enterprise AI platforms, agentic systems, AI governance, ML observability, RAG systems</KeyValue>
           <KeyValue label="stage">Executive — targeting AI leadership roles</KeyValue>
           <KeyValue label="type">ENTP — pattern-recognizer, systems thinker, novelty-driven</KeyValue>
