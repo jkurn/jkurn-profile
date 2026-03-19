@@ -613,7 +613,7 @@ export default function ProfilePage() {
         </filter>
       </svg>
 
-      <div className="max-w-3xl mx-auto px-4 pt-8 space-y-4">
+      <div className="max-w-5xl mx-auto px-4 pt-8 space-y-4">
 
         {/* ═══ HERO ═══ */}
         <header ref={heroCardRef} className="rpg-panel rpg-panel-gold p-6 gsap-panel glitch-target">
