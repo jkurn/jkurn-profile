@@ -686,7 +686,7 @@ export default function ProfilePage() {
                     href={link.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-[11px] px-3 py-2 border transition-colors"
+                    className="text-[11px] px-3 py-2 min-h-[44px] flex items-center border transition-colors"
                     style={{
                       fontFamily: 'var(--font-press-start)',
                       color: link.color,
