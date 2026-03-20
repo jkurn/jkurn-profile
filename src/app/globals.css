@@ -112,8 +112,9 @@ body {
   }
   /* Pixel font headers: scale down on small screens */
   .section-header {
-    font-size: 0.6rem !important;
-    letter-spacing: 0.08em !important;
+    font-size: 0.55rem !important;
+    letter-spacing: 0.06em !important;
+    line-height: 1.6 !important;
   }
   .accordion-header {
     padding: 10px 12px;
