@@ -31,7 +31,7 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  /* Removed scroll-behavior: smooth — it blocks programmatic scrollTo on tab switches */
 }
 
 body {
