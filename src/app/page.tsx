@@ -603,7 +603,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <main ref={mainRef} className="min-h-screen pb-20">
+    <main ref={mainRef} className="pb-20">
       <div className="scanline-overlay" />
 
       {/* Hidden SVG filter for glitch effect */}

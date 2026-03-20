@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist_Mono, Press_Start_2P } from "next/font/google";
 import "./globals.css";
 
@@ -12,6 +12,12 @@ const pressStart = Press_Start_2P({
   weight: "400",
   subsets: ["latin"],
 });
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+};
 
 export const metadata: Metadata = {
   title: "JKURN — Character Profile",
