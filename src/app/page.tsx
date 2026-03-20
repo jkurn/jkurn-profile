@@ -720,14 +720,15 @@ export default function ProfilePage() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className="flex-1 py-2 px-2 sm:px-3 text-center transition-all"
+              className="flex-1 py-2 px-2 sm:px-3 text-center transition-all focus-visible:outline-2 focus-visible:outline-offset-[-2px]"
               style={{
                 fontFamily: 'var(--font-press-start)',
-                fontSize: '0.5rem',
+                fontSize: '0.55rem',
                 color: activeTab === tab.id ? tab.color : '#8892a8',
                 background: activeTab === tab.id ? `${tab.color}15` : 'transparent',
                 borderBottom: activeTab === tab.id ? `2px solid ${tab.color}` : '2px solid transparent',
                 lineHeight: '1.4',
+                outlineColor: tab.color,
               }}
             >
               <span className="hidden sm:inline">{tab.label}</span>
