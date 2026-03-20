@@ -1,0 +1,37 @@
+{
+  "date": "2026-03-20",
+  "url": "http://localhost:3000",
+  "designScore": "B",
+  "aiSlopScore": "A",
+  "categoryGrades": {
+    "hierarchy": "B",
+    "typography": "B",
+    "color": "A",
+    "spacing": "B",
+    "interactions": "B",
+    "responsive": "B",
+    "motion": "A",
+    "content": "B",
+    "aiSlop": "A",
+    "performance": "B"
+  },
+  "findings": [
+    { "id": "FINDING-001", "title": "Social link touch targets too small", "impact": "high", "category": "interactions", "status": "verified" },
+    { "id": "FINDING-002", "title": "Tab font size too small on mobile", "impact": "high", "category": "typography", "status": "verified" },
+    { "id": "FINDING-003", "title": "prefers-reduced-motion already handled", "impact": "medium", "category": "motion", "status": "not-needed" },
+    { "id": "FINDING-004", "title": "Accordion header text orphans on mobile", "impact": "medium", "category": "typography", "status": "verified" },
+    { "id": "FINDING-005", "title": "No focus-visible ring on tabs", "impact": "medium", "category": "interactions", "status": "verified" },
+    { "id": "FINDING-006", "title": "Inline JS hover styles", "impact": "polish", "category": "code-quality", "status": "deferred" },
+    { "id": "FINDING-007", "title": "Footer alignment inconsistency", "impact": "polish", "category": "hierarchy", "status": "deferred" },
+    { "id": "FINDING-008", "title": "scroll-behavior: smooth blocks tab switches", "impact": "medium", "category": "performance", "status": "verified" },
+    { "id": "FINDING-009", "title": "Version footer tiny pixel font", "impact": "polish", "category": "typography", "status": "deferred" },
+    { "id": "FINDING-010", "title": "Avatar frame overflow", "impact": "polish", "category": "spacing", "status": "deferred" }
+  ],
+  "fixesApplied": {
+    "verified": 5,
+    "bestEffort": 0,
+    "reverted": 0,
+    "deferred": 4,
+    "notNeeded": 1
+  }
+}
