@@ -27,7 +27,7 @@ const CHARACTER = {
   badge: 'Responsible AI Leader',
   level: 32,
   xp: { current: 9800000, next: 12000000 },
-  bio: 'AI strategist and builder. Turns complex problems into systems, frameworks, and shipped products. Based in Sydney — has called six countries home.',
+  bio: 'AI strategist and builder. Turns complex problems into systems, frameworks, and shipped products. Based in Sydney — six countries called home.',
 };
 
 // ─── RADAR ATTRIBUTES (6-axis) ──────────────────────────────────
@@ -627,8 +627,8 @@ export default function ProfilePage() {
               <div>
                 <h1
                   ref={heroNameRef}
-                  className="text-sm sm:text-lg tracking-widest"
-                  style={{ fontFamily: 'var(--font-press-start)', color: 'var(--text-gold)' }}
+                  className="text-[0.6rem] sm:text-lg tracking-widest leading-relaxed"
+                  style={{ fontFamily: 'var(--font-press-start)', color: 'var(--text-gold)', overflowWrap: 'break-word' }}
                 >
                   {CHARACTER.name}
                 </h1>
@@ -666,7 +666,7 @@ export default function ProfilePage() {
                 </div>
               </div>
 
-              <p ref={heroBioRef} className="text-sm text-[#8892a8] leading-relaxed max-w-xl">
+              <p ref={heroBioRef} className="hero-bio text-[12px] sm:text-sm text-[#8892a8] leading-relaxed max-w-xl text-left">
                 {CHARACTER.bio}
               </p>
 
@@ -713,23 +713,25 @@ export default function ProfilePage() {
         {/* ═══ TAB NAVIGATION ═══ */}
         <nav className="rpg-panel p-1 flex gap-1 gsap-panel">
           {([
-            { id: 'profile' as const, label: '◆ Profile', color: '#dcc06e' },
-            { id: 'humans' as const, label: '◇ For Humans', color: '#8b5cf6' },
-            { id: 'agents' as const, label: '⚡ For AI Agents', color: '#22d3ee' },
+            { id: 'profile' as const, label: '◆ Profile', shortLabel: '◆ Profile', color: '#dcc06e' },
+            { id: 'humans' as const, label: '◇ Readme for Humans', shortLabel: '◇ For Humans', color: '#8b5cf6' },
+            { id: 'agents' as const, label: '⚡ Readme for Agents.md', shortLabel: '⚡ Agents.md', color: '#22d3ee' },
           ]).map(tab => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className="flex-1 py-2 px-3 text-center transition-all"
+              className="flex-1 py-2 px-2 sm:px-3 text-center transition-all"
               style={{
                 fontFamily: 'var(--font-press-start)',
-                fontSize: '0.6rem',
+                fontSize: '0.5rem',
                 color: activeTab === tab.id ? tab.color : '#8892a8',
                 background: activeTab === tab.id ? `${tab.color}15` : 'transparent',
                 borderBottom: activeTab === tab.id ? `2px solid ${tab.color}` : '2px solid transparent',
+                lineHeight: '1.4',
               }}
             >
-              {tab.label}
+              <span className="hidden sm:inline">{tab.label}</span>
+              <span className="sm:hidden">{tab.shortLabel}</span>
             </button>
           ))}
         </nav>

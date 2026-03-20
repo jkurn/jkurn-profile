@@ -95,6 +95,31 @@ body {
   border-color: rgba(200, 168, 78, 0.3);
 }
 
+/* Mobile text wrapping — pixel font breaks mid-word without this */
+@media (max-width: 640px) {
+  body {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+  }
+  /* Bio and general prose */
+  .hero-bio,
+  .rpg-panel p,
+  .rpg-panel li,
+  .rpg-panel span,
+  .rpg-panel pre {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+  }
+  /* Pixel font headers: scale down on small screens */
+  .section-header {
+    font-size: 0.6rem !important;
+    letter-spacing: 0.08em !important;
+  }
+  .accordion-header {
+    padding: 10px 12px;
+  }
+}
+
 /* Section headers */
 .section-header {
   font-family: var(--font-press-start), monospace;
