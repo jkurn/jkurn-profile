@@ -328,7 +328,42 @@ const BOOT_LINES = [
 export default function ProfilePage() {
   const [booted, setBooted] = useState(false);
   const [statsAnimated, setStatsAnimated] = useState(false);
-  const [activeTab, setActiveTab] = useState<'profile' | 'humans' | 'agents'>('profile');
+  const [activeTab, setActiveTabState] = useState<'profile' | 'humans' | 'agents'>('profile');
+
+  // Hash ↔ tab mapping
+  const hashToTab = useCallback((hash: string): 'profile' | 'humans' | 'agents' => {
+    if (hash === '#personal-user-manual') return 'humans';
+    if (hash === '#agents.md') return 'agents';
+    return 'profile';
+  }, []);
+
+  const tabToHash = useCallback((tab: 'profile' | 'humans' | 'agents'): string => {
+    if (tab === 'humans') return '#personal-user-manual';
+    if (tab === 'agents') return '#agents.md';
+    return '';
+  }, []);
+
+  const setActiveTab = useCallback((tab: 'profile' | 'humans' | 'agents') => {
+    setActiveTabState(tab);
+    const hash = tabToHash(tab);
+    if (hash) {
+      window.history.replaceState(null, '', hash);
+    } else {
+      window.history.replaceState(null, '', window.location.pathname);
+    }
+  }, [tabToHash]);
+
+  // Read hash on mount
+  useEffect(() => {
+    const tab = hashToTab(window.location.hash);
+    if (tab !== 'profile') setActiveTabState(tab);
+
+    const onHashChange = () => {
+      setActiveTabState(hashToTab(window.location.hash));
+    };
+    window.addEventListener('hashchange', onHashChange);
+    return () => window.removeEventListener('hashchange', onHashChange);
+  }, [hashToTab]);
   const [openSections, setOpenSections] = useState<Set<string>>(() => new Set(['achievements', 'attributes']));
   const prefersReducedMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const bootRef = useRef<HTMLDivElement>(null);
