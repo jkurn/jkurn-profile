@@ -312,6 +312,31 @@ function ProficiencyBadge({ level }: { level: Proficiency }) {
 }
 
 
+// ─── PRODUCTS & PROJECTS ────────────────────────────────────────
+interface Product {
+  name: string;
+  url: string;
+  description: string;
+  type: 'product' | 'project';
+}
+
+const PRODUCTS: Product[] = [
+  { name: 'Airworthy.ai', url: 'https://airworthy.ai', description: 'Real-time safety monitoring and risk inspection for enterprise AI systems.', type: 'product' },
+  { name: 'Build Corporate Branding', url: 'https://buildcorporatebranding.com', description: 'Behavioral branding framework that teaches companies to influence customer decisions using neuroscience.', type: 'product' },
+  { name: 'Build on Claw', url: 'https://buildonclaw.com', description: '33 real-world use cases for OpenClaw, the open hardware robotics platform.', type: 'product' },
+  { name: 'Build Personal Branding', url: 'https://buildpersonalbranding.com', description: 'Personal branding assessment and coaching service for professionals building their public presence.', type: 'product' },
+  { name: 'Build PKM', url: 'https://buildpkm.com', description: 'Free 3-minute diagnostic that identifies where your personal knowledge management system breaks down.', type: 'product' },
+  { name: 'Carer Liaison', url: 'https://carerliaison.com', description: 'AI-powered caregiving operating system with six intelligent agents for health monitoring and adaptive planning.', type: 'product' },
+  { name: 'Claude Code Studio', url: 'https://claudecode.studio', description: 'Structured learning platform for mastering Claude Code through skill assessment and weekly challenges.', type: 'product' },
+  { name: 'Strator AI', url: 'https://strator-ai.com', description: 'AI platform that analyzes health insurance claims for fraud, waste, and abuse in the Indonesian market.', type: 'product' },
+];
+
+const PROJECTS: Product[] = [
+  { name: 'AGI Conglomerate', url: 'https://jkurn.github.io/agi-conglomerate-landing/', description: 'AI-native venture studio concept with five interlocking product engines.', type: 'project' },
+  { name: 'Brand Style Selector', url: 'https://jkurn.github.io/brand-style-selector/', description: 'Interactive brand identity selector exploring 12 archetypes to define your personal brand.', type: 'project' },
+  { name: 'Bridge AI Knowledge', url: 'https://jkurn.github.io/bridgeai-website/', description: 'AI consultancy website for enterprise RAG and agent systems across Canada, MENA, and Indonesia.', type: 'project' },
+];
+
 // ─── BOOT SEQUENCE ──────────────────────────────────────────────
 
 const BOOT_LINES = [
@@ -328,22 +353,24 @@ const BOOT_LINES = [
 export default function ProfilePage() {
   const [booted, setBooted] = useState(false);
   const [statsAnimated, setStatsAnimated] = useState(false);
-  const [activeTab, setActiveTabState] = useState<'profile' | 'humans' | 'agents'>('profile');
+  const [activeTab, setActiveTabState] = useState<'profile' | 'products' | 'humans' | 'agents'>('profile');
 
   // Hash ↔ tab mapping
-  const hashToTab = useCallback((hash: string): 'profile' | 'humans' | 'agents' => {
+  const hashToTab = useCallback((hash: string): 'profile' | 'products' | 'humans' | 'agents' => {
+    if (hash === '#products') return 'products';
     if (hash === '#personal-user-manual') return 'humans';
     if (hash === '#agents.md') return 'agents';
     return 'profile';
   }, []);
 
-  const tabToHash = useCallback((tab: 'profile' | 'humans' | 'agents'): string => {
+  const tabToHash = useCallback((tab: 'profile' | 'products' | 'humans' | 'agents'): string => {
+    if (tab === 'products') return '#products';
     if (tab === 'humans') return '#personal-user-manual';
     if (tab === 'agents') return '#agents.md';
     return '';
   }, []);
 
-  const setActiveTab = useCallback((tab: 'profile' | 'humans' | 'agents') => {
+  const setActiveTab = useCallback((tab: 'profile' | 'products' | 'humans' | 'agents') => {
     setActiveTabState(tab);
     const hash = tabToHash(tab);
     if (hash) {
@@ -749,6 +776,7 @@ export default function ProfilePage() {
         <nav className="rpg-panel p-1 flex gap-1 gsap-panel">
           {([
             { id: 'profile' as const, label: '◆ Profile', shortLabel: '◆ Profile', color: '#dcc06e' },
+            { id: 'products' as const, label: '🚢 Products', shortLabel: '🚢 Products', color: '#22d3ee' },
             { id: 'humans' as const, label: '◇ Readme for Humans', shortLabel: '◇ For Humans', color: '#8b5cf6' },
             { id: 'agents' as const, label: '⚡ Readme for Agents.md', shortLabel: '⚡ Agents.md', color: '#22d3ee' },
           ]).map(tab => (
@@ -773,6 +801,61 @@ export default function ProfilePage() {
         </nav>
 
         {/* ═══ TAB CONTENT ═══ */}
+        {activeTab === 'products' && (
+          <div className="space-y-4">
+            <div className="rpg-panel p-4 sm:p-5">
+              <h3
+                className="text-xs tracking-wider uppercase mb-3 flex items-center gap-2"
+                style={{ fontFamily: 'var(--font-press-start)', color: '#22d3ee' }}
+              >
+                Launched Products
+              </h3>
+              <div className="space-y-2">
+                {PRODUCTS.map(p => (
+                  <a
+                    key={p.name}
+                    href={p.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block rpg-panel p-3 border-l-2 border-l-[#22d3ee] hover:bg-[#1a2234] transition-colors"
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <span className="text-sm font-bold text-[#22d3ee]">{p.name}</span>
+                      <span className="text-[11px] text-[#5a6478] shrink-0">↗</span>
+                    </div>
+                    <p className="text-[13px] text-[#8892a8] mt-1">{p.description}</p>
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            <div className="rpg-panel p-4 sm:p-5">
+              <h3
+                className="text-xs tracking-wider uppercase mb-3 flex items-center gap-2"
+                style={{ fontFamily: 'var(--font-press-start)', color: '#8b5cf6' }}
+              >
+                Personal Projects
+              </h3>
+              <div className="space-y-2">
+                {PROJECTS.map(p => (
+                  <a
+                    key={p.name}
+                    href={p.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block rpg-panel p-3 border-l-2 border-l-[#8b5cf6] hover:bg-[#1a2234] transition-colors"
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <span className="text-sm font-bold text-[#8b5cf6]">{p.name}</span>
+                      <span className="text-[11px] text-[#5a6478] shrink-0">↗</span>
+                    </div>
+                    <p className="text-[13px] text-[#8892a8] mt-1">{p.description}</p>
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
         {activeTab === 'humans' && <HumanManualView />}
         {activeTab === 'agents' && <AgentManualView />}
 
