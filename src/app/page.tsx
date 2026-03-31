@@ -335,6 +335,7 @@ const PROJECTS: Product[] = [
   { name: 'AGI Conglomerate', url: 'https://jkurn.github.io/agi-conglomerate-landing/', description: 'AI-native venture studio concept with five interlocking product engines.', type: 'project' },
   { name: 'Brand Style Selector', url: 'https://jkurn.github.io/brand-style-selector/', description: 'Interactive brand identity selector exploring 12 archetypes to define your personal brand.', type: 'project' },
   { name: 'Bridge AI Knowledge', url: 'https://jkurn.github.io/bridgeai-website/', description: 'AI consultancy website for enterprise RAG and agent systems across Canada, MENA, and Indonesia.', type: 'project' },
+  { name: 'Build With Cursor', url: 'https://buildwithcursor.com/', description: "Indonesia's largest AI hackathon inviting developers to build and ship AI-powered projects using Cursor.", type: 'project' },
 ];
 
 // ─── BOOT SEQUENCE ──────────────────────────────────────────────
